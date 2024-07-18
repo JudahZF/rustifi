@@ -1,0 +1,18 @@
+[package]
+name = "unifi-rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["Judah Fuller <it@judahfuller.com>"]
+description = "Open source rust library to interface with Ubiquiti's Unifi Controller."
+license = "Apache-2.0"
+license-file = "LICENSE.md"
+readme = "README.md"
+repository = "https://github.com/JudahZF/unifi-rs"
+
+keywords = ["unifi", "ubiquiti"]
+
+[dependencies]
+reqwest = "0.12.5"
+serde = { version = "1.0.204", features = ["derive", "serde_derive"] }
+serde_json = "1.0.120"
+tokio = { version = "1.38.1", features = ["full"] }
