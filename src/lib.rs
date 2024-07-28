@@ -1,1 +1,26 @@
+mod auth;
 
+use auth::sign_in;
+use reqwest::{header, Client};
+
+async fn connect(
+    addr: &String,
+    username: String,
+    password: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "Content-Type",
+        header::HeaderValue::from_static("application/json"),
+    );
+    let client = Client::builder()
+        .default_headers(headers)
+        .user_agent("unifi-rs")
+        .cookie_store(true)
+        .build()?;
+    match sign_in(&client, addr, username, password).await {
+        Ok(_) => {}
+        Err(_) => panic!("Unable to sign into the controller API"),
+    };
+    Ok(())
+}

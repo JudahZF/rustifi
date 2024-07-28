@@ -1,23 +1,22 @@
-use std::str::FromStr;
+use reqwest::{Client, Url};
+use serde::{Deserialize, Serialize};
 
-use reqwest::{Client, Request, Url};
-
-struct sign_in_request {
+#[derive(Debug, Serialize, Deserialize)]
+struct SignInRequest {
     username: String,
     password: String,
 }
 
-async fn sign_in(
+pub async fn sign_in(
     client: &Client,
     addr: &String,
     username: String,
     password: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let url = Url::parse((addr.clone() + "/api/login").as_str()).unwrap();
-    let data: sign_in_request = sign_in_request {
-        username,
-        password,
+    let data: SignInRequest = SignInRequest { username, password };
+    match client.post(url).json(&data).send().await {
+        Ok(_response) => return Ok(()),
+        Err(e) => return Err(Box::new(e)),
     };
-    let response = client.post(url).header("", "").body(sign_in_request).
-    Ok(())
 }
