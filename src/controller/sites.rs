@@ -79,26 +79,28 @@ struct Response {
     data: Vec<ResponseSite>,
 }
 
-pub struct Out {
-    pub headers: HeaderMap,
-    pub data: Vec<ResponseSite>,
-}
-
 pub async fn get_sites(
     client: &Client,
     jar: &Jar,
-    url: Url,
-) -> Result<Out, Box<dyn std::error::Error>> {
+    addr: String,
+) -> Result<Vec<Site>, Box<dyn std::error::Error>> {
+    let url = Url::parse((addr.clone() + "/stat/sites").as_str()).unwrap();
     let cookies = jar.cookies(&url);
     let mut headers = HeaderMap::new();
     headers.insert("Cookie", cookies.unwrap());
     match client.get(url).headers(headers.clone()).send().await {
         Ok(response) => {
+            //print!("{:?}", response.text().await?);
+            let mut sites = Vec::new();
             let response = response.json::<Response>().await?;
-            return Ok(Out {
-                headers,
-                data: response.data,
-            });
+            for site in response.data {
+                sites.push(Site {
+                    name: site.name,
+                    id: site._id.clone(),
+                    api_addr: addr.clone() + "/s/" + site._id.as_str(),
+                });
+            }
+            return Ok(sites);
         }
         Err(e) => return Err(Box::new(e)),
     };
@@ -107,30 +109,6 @@ pub async fn get_sites(
 #[derive(Debug, Clone)]
 pub struct Site {
     pub api_addr: String,
-    pub client: Client,
-    pub headers: HeaderMap,
     pub name: String,
     pub id: String,
-}
-
-impl Site {
-    pub async fn get_active_clients(&self) -> Result<(), Box<dyn std::error::Error>> {
-        print!(
-            "{:?}",
-            self.client
-                .get(Url::parse((self.api_addr.clone() + "/stat/sta").as_str()).unwrap())
-                .headers(self.headers.clone())
-                .send()
-                .await?
-        );
-        Ok(())
-    }
-
-    pub async fn get_id(&self) -> Result<String, Box<dyn std::error::Error>> {
-        Ok(self.id.clone())
-    }
-
-    pub async fn get_name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        Ok(self.name.clone())
-    }
 }

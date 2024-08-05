@@ -3,8 +3,8 @@ mod controller;
 
 use auth::sign_in;
 use controller::sites::Site;
-use reqwest::{cookie::Jar, header::HeaderMap, Client, Url};
-use std::{borrow::Borrow, sync::Arc};
+use reqwest::{cookie::Jar, Client};
+use std::sync::Arc;
 
 pub struct UnifiController {
     addr: String,
@@ -13,6 +13,7 @@ pub struct UnifiController {
     is_udm: bool,
     client: Client,
     sites: Vec<Site>,
+    pub current_site: Option<Site>,
 }
 
 impl UnifiController {
@@ -43,23 +44,11 @@ impl UnifiController {
             Err(_) => panic!("Unable to sign into the controller API"),
         };
 
-        let mut sites = Vec::new();
-        let url = Url::parse((addr.clone() + "/stat/sites").as_str()).unwrap();
-
-        match controller::sites::get_sites(&client, &cookie_store, url).await {
-            Ok(out) => {
-                for site in out.data {
-                    sites.push(Site {
-                        name: site.name,
-                        client: client.clone(),
-                        id: site._id.clone(),
-                        api_addr: api_root.clone() + "/s/" + site._id.as_str(),
-                        headers: out.headers.clone(),
-                    });
-                }
-            }
-            Err(e) => return Err(e),
-        };
+        let sites =
+            match controller::sites::get_sites(&client, &cookie_store, api_root.clone()).await {
+                Ok(sites) => sites,
+                Err(e) => panic!("Unable to get the sites: {}", e),
+            };
 
         Ok(UnifiController {
             addr,
@@ -68,10 +57,24 @@ impl UnifiController {
             api_root,
             client,
             sites,
+            current_site: None,
         })
     }
 
     pub fn get_sites(&self) -> Vec<Site> {
         self.sites.clone()
+    }
+
+    pub fn set_site(&mut self, site_name: String) -> Result<(), Box<dyn std::error::Error>> {
+        for site in self.sites.clone() {
+            if site.name == site_name {
+                self.current_site = Some(site);
+                return Ok(());
+            }
+        }
+        Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "Site not found",
+        )))
     }
 }

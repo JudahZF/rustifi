@@ -6,13 +6,15 @@ async fn main() {
     let username = "admin".to_string();
     let password = "admin".to_string();
     let is_udm = false;
-    let controller = match UnifiController::new(addr, username, password, is_udm).await {
+    let mut controller = match UnifiController::new(addr, username, password, is_udm).await {
         Ok(controller) => controller,
-        Err(_) => panic!("Unable to connect to the controller"),
+        Err(e) => panic!("Unable to connect to the controller: {}", e),
     };
 
-    let sites = controller.get_sites();
+    match controller.set_site("default".to_string()) {
+        Ok(_) => {}
+        Err(e) => panic!("Unable to set the site: {}", e),
+    };
 
-    let site = &sites[0];
-    site.get_active_clients().await.unwrap();
+    println!("Site: {}", controller.current_site.unwrap().name);
 }
