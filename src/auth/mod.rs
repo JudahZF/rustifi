@@ -19,8 +19,9 @@ pub async fn sign_in(
         url = Url::parse((addr.clone() + "/api/auth/login").as_str()).unwrap();
     }
     let data: SignInRequest = SignInRequest { username, password };
-    match client.post(url).json(&data).send().await {
-        Ok(_response) => return Ok(()),
+
+    match client.post(url.clone()).json(&data).send().await {
+        Ok(_) => return Ok(()),
         Err(e) => return Err(Box::new(e)),
     };
 }
