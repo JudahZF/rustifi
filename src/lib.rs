@@ -1,16 +1,16 @@
 mod auth;
 mod controller;
+mod site;
 
 use auth::sign_in;
-use controller::sites::Site;
 use reqwest::{cookie::Jar, Client};
+use site::types::Site;
 use std::sync::Arc;
 
 pub struct UnifiController {
     addr: String,
     api_root: String,
     cookie_store: Arc<Jar>,
-    is_udm: bool,
     client: Client,
     sites: Vec<Site>,
     pub current_site: Option<Site>,
@@ -36,7 +36,7 @@ impl UnifiController {
         let mut api_root = addr.clone() + "/api";
 
         if is_udm {
-            api_root = addr.clone() + "/proxy/network";
+            api_root = addr.clone() + "/proxy/network/api";
         }
 
         match sign_in(&client, &addr, username.clone(), password.clone(), is_udm).await {
@@ -44,15 +44,13 @@ impl UnifiController {
             Err(_) => panic!("Unable to sign into the controller API"),
         };
 
-        let sites =
-            match controller::sites::get_sites(&client, &cookie_store, api_root.clone()).await {
-                Ok(sites) => sites,
-                Err(e) => panic!("Unable to get the sites: {}", e),
-            };
+        let sites = match controller::get_sites(&client, &cookie_store, api_root.clone()).await {
+            Ok(sites) => sites,
+            Err(e) => panic!("Unable to get the sites: {}", e),
+        };
 
         Ok(UnifiController {
             addr,
-            is_udm,
             cookie_store,
             api_root,
             client,
@@ -68,7 +66,9 @@ impl UnifiController {
     pub fn set_site(&mut self, site_name: String) -> Result<(), Box<dyn std::error::Error>> {
         for site in self.sites.clone() {
             if site.name == site_name {
-                self.current_site = Some(site);
+                let mut new_site = site.clone();
+                new_site.set_active(self.client.clone(), &self.cookie_store);
+                self.current_site = Some(new_site);
                 return Ok(());
             }
         }
