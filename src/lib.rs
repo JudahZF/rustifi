@@ -1,6 +1,9 @@
 mod auth;
 mod controller;
+mod device;
+mod responses;
 mod site;
+mod types;
 
 use auth::sign_in;
 use reqwest::{cookie::Jar, Client};

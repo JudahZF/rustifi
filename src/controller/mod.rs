@@ -16,10 +16,11 @@ pub async fn get_sites(
     let url = Url::parse((addr.clone() + "/stat/sites").as_str()).unwrap();
     let cookies = jar.cookies(&url);
     let mut headers = HeaderMap::new();
-    headers.insert("Cookie", cookies.unwrap());
+    if cookies.is_some() {
+        headers.insert("Cookie", cookies.unwrap());
+    }
     match client.get(url).headers(headers.clone()).send().await {
         Ok(response) => {
-            //println!("{:?}", response.text().await?);
             let mut sites = Vec::new();
             let response = match response.json::<SiteListResponse>().await {
                 Ok(response) => response,
@@ -27,9 +28,9 @@ pub async fn get_sites(
             };
             for site in response.data {
                 sites.push(Site {
-                    name: site.name,
+                    name: site.desc,
                     id: site.id.clone(),
-                    addr: addr.clone() + "/s/" + site.attr_hidden_id.as_str(),
+                    addr: addr.clone() + "/s/" + site.name.as_str(),
                     client: None,
                     cookies: None,
                 });
