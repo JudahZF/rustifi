@@ -19,3 +19,4 @@ test.py
 
 samples
 **/sample.json
+*.env*

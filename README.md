@@ -40,3 +40,21 @@
       - [] Ban
     - [] WiFi
     - [] Network
+
+## Models
+
+### APs
+
+- [] UX
+- [] NanoHD
+- [] U7-Pro
+- [] U7-Pro-Max
+- [] U6-Mesh
+- [] U6-Mesh-Pro
+- [] UWB-XG
+- [] UAP-XG
+
+### Switch
+
+- [] USW-Pro-Aggregation
+- [] USW-Aggregation
