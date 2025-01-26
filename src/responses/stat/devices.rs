@@ -971,7 +971,7 @@ pub struct Ap {
     #[serde(rename = "port_1-tx_multicast")]
     pub port_1_tx_multicast: f64,
     #[serde(rename = "port_1-tx_broadcast")]
-    pub port_1_tx_broadcast: f64,
+    pub port_1_tx_broadcast: Option<f64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
