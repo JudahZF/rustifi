@@ -39,6 +39,5 @@ async fn main() -> Result<(), ()> {
             device.name, device.dev_type, device.mac, device.model
         );
     }
-    current_site.get_device_stats().await.unwrap();
     Ok(())
 }
