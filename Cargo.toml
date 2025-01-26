@@ -2,12 +2,11 @@
 name = "rustifi"
 version = "0.1.0"
 edition = "2021"
-authors = ["Judah Fuller <it@judahfuller.com>"]
+authors = ["Judah Fuller <judah@judahfuller.com>"]
 description = "Open source rust library to interface with Ubiquiti's Unifi Controller."
-license = "Apache-2.0"
+license = "MIT"
 readme = "README.md"
 repository = "https://github.com/JudahZF/rustifi"
-
 keywords = ["unifi", "ubiquiti"]
 
 [dependencies]
