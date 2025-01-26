@@ -1,4 +1,4 @@
-mod models;
+pub mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
@@ -10,14 +10,14 @@ use crate::types::{
     user_stats::{InterfaceUserStats, UserStats},
 };
 use chrono::prelude::*;
-use models::Type;
+use models::DeviceType;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct Device {
     id: String,
     pub mac: String,
     pub model: String,
-    pub dev_type: Type,
+    pub dev_type: DeviceType,
     pub name: String,
     network_config: NetConfig,
     ip: IP,
@@ -43,7 +43,7 @@ impl From<RawDevice> for Device {
             id: raw.id,
             mac: raw.mac,
             model: raw.model,
-            dev_type: Type::from(raw.type_field.as_str()),
+            dev_type: DeviceType::from(raw.type_field.as_str()),
             name: raw.name,
             network_config: NetConfig::from(raw.config_network),
             ip: IP::from(raw.ip),

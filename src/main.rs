@@ -1,5 +1,5 @@
 use dotenv;
-use rustifi::UnifiController;
+use rustifi::{device::models::DeviceType, UnifiController};
 use std::env;
 use tokio;
 
@@ -34,10 +34,12 @@ async fn main() -> Result<(), ()> {
     let devices = current_site.clone().get_devices().await.unwrap();
     println!("Devices: ");
     for device in devices {
-        println!(
-            "  - {}, type: {:?}, mac: {}, model: {}",
-            device.name, device.dev_type, device.mac, device.model
-        );
+        if device.dev_type == DeviceType::AccessPoint {
+            println!(
+                "  - {}, mac: {}, model: {}",
+                device.name, device.mac, device.model
+            );
+        }
     }
     Ok(())
 }
