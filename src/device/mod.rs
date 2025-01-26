@@ -1,6 +1,6 @@
 mod models;
 
-use crate::responses::stat::devices::{RawDevice, SystemStats as RawSystemStats};
+use crate::responses::stat::devices::RawDevice;
 use crate::types::{
     ip::IP,
     net_config::NetConfig,
