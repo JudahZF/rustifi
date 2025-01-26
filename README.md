@@ -1,4 +1,4 @@
-# unifi-rs
+# rustifi
 
 ## Layout & Features
 

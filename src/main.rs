@@ -1,7 +1,7 @@
 use dotenv;
+use rustifi::UnifiController;
 use std::env;
 use tokio;
-use unifi_rs::UnifiController;
 
 static ADDR: &str = "API_ADDR";
 static USER: &str = "API_USER";
