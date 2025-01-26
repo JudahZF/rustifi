@@ -1,25 +1,45 @@
 # rustifi
 
+WORK IN PROGRESS
+
+A rust API library for Unifi Controller.
+
+
+## To Do
+
+- [ ] Implement some access points
+- [ ] Implement some switches
+- [ ] Ensure compliance with Rust API Guidelines Checklist, Including traits
+    - Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Display, Default
+    - From, TryFrom, AsRef, AsMut
+    - Errors
+- [ ] Tests
+- [ ] Documentation
+- [ ] Examples
+
 ## Layout & Features
 
 - [] Controller
   - [] Site
     - [] Devices
+      - [] Basic Information
+       - [x] Get
+       - [] Update
       - [] AP
         - [] Group
-        - [] Model
-        - [] Name
+        - [x] Model
+        - [x] Name
         - [] Radio
             - [] Channel
             - [] Width
             - [] Power
             - [] Meshing
         - [] Number of Clients
-        - [] CPU
-        - [] Memory
+        - [x] CPU
+        - [x] Memory
       - [] SW
-        - [] Name
-        - [] Model
+        - [x] Name
+        - [x] Model
         - [] Port
           - [] Number
           - [] Type
@@ -32,8 +52,8 @@
           - [] Native VLAN
           - [] Allowed VLANs
           - [] Port Isolation
-        - [] CPU
-        - [] Memory
+        - [x] CPU
+        - [x] Memory
     - [] Clients
       - [] Type
       - [] Impose Punishment
