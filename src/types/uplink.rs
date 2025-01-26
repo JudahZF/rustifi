@@ -2,8 +2,9 @@ use crate::{
     responses::stat::devices::Uplink as RawUplink,
     types::{ip::IP, media::Media, port::PortStats},
 };
+use std::fmt::Display;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct Uplink {
     ip: IP,
     name: String,
@@ -14,8 +15,18 @@ pub struct Uplink {
     stats: PortStats,
 }
 
-impl Uplink {
-    pub fn from_raw(raw: RawUplink) -> Uplink {
+impl Display for Uplink {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "IP: {}\nName: {}\nNetmask: {}\nPort Number: {}\nUp: {}\nMedia: {}\n{}",
+            self.ip, self.name, self.netmask, self.port_num, self.up, self.media, self.stats
+        )
+    }
+}
+
+impl From<RawUplink> for Uplink {
+    fn from(raw: RawUplink) -> Self {
         Uplink {
             ip: IP::from(match raw.ip {
                 Some(i) => i,
@@ -38,7 +49,7 @@ impl Uplink {
                 None => true,
             },
             media: match raw.media {
-                Some(s) => Media::from_string(s),
+                Some(s) => Media::from(s),
                 None => Media::GigabitEthernet,
             },
             stats: PortStats {

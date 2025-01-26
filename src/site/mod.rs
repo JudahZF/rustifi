@@ -43,7 +43,7 @@ impl Site {
                 };
                 for device in response.data {
                     if device.adopted {
-                        devices.push(Device::from_req(device));
+                        devices.push(Device::from(device));
                     }
                 }
                 return Ok(devices);

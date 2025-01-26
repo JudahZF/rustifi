@@ -1,6 +1,7 @@
 use crate::responses::stat::devices::SystemStats as RawSystemStats;
+use std::fmt::Display;
 
-#[derive(Debug, Clone)]
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct SystemStats {
     pub cpu: f32,
     pub memory: f32,
@@ -8,18 +9,31 @@ pub struct SystemStats {
 }
 
 impl SystemStats {
-    pub fn from_raw(raw: Option<RawSystemStats>) -> SystemStats {
-        match raw {
-            Some(s) => SystemStats {
-                cpu: s.cpu.parse::<f32>().unwrap(),
-                memory: s.mem.parse::<f32>().unwrap(),
-                uptime: s.uptime.parse::<u64>().unwrap(),
-            },
-            None => SystemStats {
-                cpu: -1.0,
-                memory: -1.0,
-                uptime: 0,
-            },
+    pub fn new(cpu: f32, memory: f32, uptime: u64) -> Self {
+        SystemStats {
+            cpu,
+            memory,
+            uptime,
         }
+    }
+}
+
+impl From<RawSystemStats> for SystemStats {
+    fn from(raw: RawSystemStats) -> Self {
+        SystemStats {
+            cpu: raw.cpu.parse::<f32>().unwrap(),
+            memory: raw.mem.parse::<f32>().unwrap(),
+            uptime: raw.uptime.parse::<u64>().unwrap(),
+        }
+    }
+}
+
+impl Display for SystemStats {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "CPU: {}\nMemory: {}\nUptime: {}",
+            self.cpu, self.memory, self.uptime
+        )
     }
 }

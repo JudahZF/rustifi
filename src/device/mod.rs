@@ -1,10 +1,9 @@
 mod models;
 
-use crate::responses::stat::devices::RawDevice;
+use crate::responses::stat::devices::{RawDevice, SystemStats as RawSystemStats};
 use crate::types::{
     ip::IP,
     net_config::NetConfig,
-    network::Network,
     system_stats::SystemStats,
     temperature::Temperature,
     uplink::Uplink,
@@ -13,7 +12,7 @@ use crate::types::{
 use chrono::prelude::*;
 use models::Type;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct Device {
     id: String,
     pub mac: String,
@@ -29,7 +28,7 @@ pub struct Device {
     serial: String,
     last_seen: DateTime<Utc>,
     next_interval: u16,
-    system_stats: SystemStats,
+    system_stats: Option<SystemStats>,
     connected_network: String,
     temperatures: Option<Vec<Temperature>>,
     overheating: bool,
@@ -38,15 +37,15 @@ pub struct Device {
     user_stats: UserStats,
 }
 
-impl Device {
-    pub fn from_req(raw: RawDevice) -> Device {
+impl From<RawDevice> for Device {
+    fn from(raw: RawDevice) -> Self {
         let device = Device {
             id: raw.id,
             mac: raw.mac,
             model: raw.model,
-            dev_type: Type::from_str(raw.type_field.as_str()),
+            dev_type: Type::from(raw.type_field.as_str()),
             name: raw.name,
-            network_config: NetConfig::from_raw(raw.config_network),
+            network_config: NetConfig::from(raw.config_network),
             ip: IP::from(raw.ip),
             connected_at: DateTime::from_timestamp(raw.connected_at, 0).expect("Invalid timestamp"),
             provisioned_at: DateTime::from_timestamp(raw.provisioned_at, 0)
@@ -77,7 +76,10 @@ impl Device {
                 Some(i) => i,
                 None => 30,
             },
-            system_stats: SystemStats::from_raw(raw.system_stats),
+            system_stats: (match raw.system_stats {
+                Some(s) => Some(SystemStats::from(s)),
+                None => None,
+            }),
             connected_network: match raw.connection_network_name {
                 Some(n) => n,
                 None => "".to_string(),
@@ -91,7 +93,7 @@ impl Device {
                 Some(i) => i,
                 None => false,
             },
-            uplink: Uplink::from_raw(raw.uplink),
+            uplink: Uplink::from(raw.uplink),
             user_stats: UserStats {
                 users: InterfaceUserStats {
                     total: raw.user_num_sta,

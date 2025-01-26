@@ -1,4 +1,6 @@
-#[derive(Debug, Clone)]
+use std::fmt::Display;
+
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct PortStats {
     pub rx_bytes: u64,
     pub tx_bytes: u64,
@@ -14,4 +16,27 @@ pub struct PortStats {
     pub speed: u32,
     pub max_speed: u32,
     pub full_duplex: bool,
+}
+
+impl Display for PortStats {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "RX Bytes: {}\nTX Bytes: {}\nRX Packets: {}\nTX Packets: {}\nRX Errors: {}\nTX Errors: {}\nRX Dropped: {}\nTX Dropped: {}\nRX Multicast: {}\nRX Rate: {}\nTX Rate: {}\nSpeed: {}\nMax Speed: {}\nFull Duplex: {}",
+            self.rx_bytes,
+            self.tx_bytes,
+            self.rx_packets,
+            self.tx_packets,
+            self.rx_errors,
+            self.tx_errors,
+            self.rx_dropped,
+            self.tx_dropped,
+            self.rx_multicast,
+            self.rx_rate,
+            self.tx_rate,
+            self.speed,
+            self.max_speed,
+            self.full_duplex
+        )
+    }
 }
