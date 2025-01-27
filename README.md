@@ -19,62 +19,62 @@ A rust API library for Unifi Controller.
 
 ## Layout & Features
 
-- [] Controller
-  - [] Site
-    - [] Devices
-      - [] Basic Information
+- [ ] Controller
+  - [ ] Site
+    - [ ] Devices
+      - [ ] Basic Information
        - [x] Get
-       - [] Update
-      - [] AP
-        - [] Group
+       - [ ] Update
+      - [ ] AP
+        - [ ] Group
         - [x] Model
         - [x] Name
-        - [] Radio
-            - [] Channel
-            - [] Width
-            - [] Power
-            - [] Meshing
-        - [] Number of Clients
+        - [ ] Radio
+            - [ ] Channel
+            - [ ] Width
+            - [ ] Power
+            - [ ] Meshing
+        - [ ] Number of Clients
         - [x] CPU
         - [x] Memory
-      - [] SW
+      - [ ] SW
         - [x] Name
         - [x] Model
-        - [] Port
-          - [] Number
-          - [] Type
-          - [] Status
-          - [] Uptime
-          - [] Bytes
-          - [] Packets
-          - [] Dropped
-          - [] Errors
-          - [] Native VLAN
-          - [] Allowed VLANs
-          - [] Port Isolation
+        - [ ] Port
+          - [ ] Number
+          - [ ] Type
+          - [ ] Status
+          - [ ] Uptime
+          - [ ] Bytes
+          - [ ] Packets
+          - [ ] Dropped
+          - [ ] Errors
+          - [ ] Native VLAN
+          - [ ] Allowed VLANs
+          - [ ] Port Isolation
         - [x] CPU
         - [x] Memory
-    - [] Clients
-      - [] Type
-      - [] Impose Punishment
-      - [] Ban
-    - [] WiFi
-    - [] Network
+    - [ ] Clients
+      - [ ] Type
+      - [ ] Impose Punishment
+      - [ ] Ban
+    - [ ] WiFi
+    - [ ] Network
 
 ## Models
 
 ### APs
 
-- [] UX
-- [] NanoHD
-- [] U7-Pro
-- [] U7-Pro-Max
-- [] U6-Mesh
-- [] U6-Mesh-Pro
-- [] UWB-XG
-- [] UAP-XG
+- [ ] UX
+- [ ] NanoHD
+- [ ] U7-Pro
+- [ ] U7-Pro-Max
+- [ ] U6-Mesh
+- [ ] U6-Mesh-Pro
+- [ ] UWB-XG
+- [ ] UAP-XG
 
 ### Switch
 
-- [] USW-Pro-Aggregation
-- [] USW-Aggregation
+- [ ] USW-Pro-Aggregation
+- [ ] USW-Aggregation
