@@ -19,47 +19,45 @@ A rust API library for Unifi Controller.
 
 ## Layout & Features
 
-- [ ] Controller
-  - [ ] Site
-    - [ ] Devices
-      - [ ] Basic Information
-       - [x] Get
-       - [ ] Update
-      - [ ] AP
-        - [ ] Group
-        - [x] Model
-        - [x] Name
-        - [ ] Radio
-            - [ ] Channel
-            - [ ] Width
-            - [ ] Power
-            - [ ] Meshing
-        - [ ] Number of Clients
-        - [x] CPU
-        - [x] Memory
-      - [ ] SW
-        - [x] Name
-        - [x] Model
-        - [ ] Port
-          - [ ] Number
-          - [ ] Type
-          - [ ] Status
-          - [ ] Uptime
-          - [ ] Bytes
-          - [ ] Packets
-          - [ ] Dropped
-          - [ ] Errors
-          - [ ] Native VLAN
-          - [ ] Allowed VLANs
-          - [ ] Port Isolation
-        - [x] CPU
-        - [x] Memory
-    - [ ] Clients
-      - [ ] Type
-      - [ ] Impose Punishment
-      - [ ] Ban
-    - [ ] WiFi
-    - [ ] Network
+- [ ] Devices
+    - [ ] Basic Information
+    - [x] Get
+    - [ ] Update
+    - [ ] AP
+    - [ ] Group
+    - [x] Model
+    - [x] Name
+    - [ ] Radio
+        - [ ] Channel
+        - [ ] Width
+        - [ ] Power
+        - [ ] Meshing
+    - [ ] Number of Clients
+    - [x] CPU
+    - [x] Memory
+    - [ ] SW
+    - [x] Name
+    - [x] Model
+    - [ ] Port
+        - [ ] Number
+        - [ ] Type
+        - [ ] Status
+        - [ ] Uptime
+        - [ ] Bytes
+        - [ ] Packets
+        - [ ] Dropped
+        - [ ] Errors
+        - [ ] Native VLAN
+        - [ ] Allowed VLANs
+        - [ ] Port Isolation
+    - [x] CPU
+    - [x] Memory
+- [ ] Clients
+    - [ ] Type
+    - [ ] Impose Punishment
+    - [ ] Ban
+- [ ] WiFi
+- [ ] Network
 
 ## Models
 
