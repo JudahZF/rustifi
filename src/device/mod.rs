@@ -2,12 +2,13 @@ pub mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
+    config_net::ConfigNet,
     ip::IP,
-    net_config::NetConfig,
     system_stats::SystemStats,
     temperature::Temperature,
     uplink::Uplink,
     user_stats::{InterfaceUserStats, UserStats},
+    version::Version,
 };
 use chrono::prelude::*;
 use models::DeviceType;
@@ -19,7 +20,7 @@ pub struct Device {
     pub model: String,
     pub dev_type: DeviceType,
     pub name: String,
-    network_config: NetConfig,
+    config_network: ConfigNet,
     ip: IP,
     connected_at: DateTime<Utc>,
     provisioned_at: DateTime<Utc>,
@@ -35,6 +36,7 @@ pub struct Device {
     isolated: bool,
     uplink: Uplink,
     user_stats: UserStats,
+    version: Version,
 }
 
 impl From<RawDevice> for Device {
@@ -45,7 +47,7 @@ impl From<RawDevice> for Device {
             model: raw.model,
             dev_type: DeviceType::from(raw.type_field.as_str()),
             name: raw.name,
-            network_config: NetConfig::from(raw.config_network),
+            config_network: ConfigNet::from(raw.config_network),
             ip: IP::from(raw.ip),
             connected_at: DateTime::from_timestamp(raw.connected_at, 0).expect("Invalid timestamp"),
             provisioned_at: DateTime::from_timestamp(raw.provisioned_at, 0)
@@ -111,6 +113,7 @@ impl From<RawDevice> for Device {
                 },
                 total: raw.num_sta,
             },
+            version: Version::from(raw.version),
         };
         device
     }

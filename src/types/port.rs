@@ -1,4 +1,25 @@
+use crate::responses::stat::devices::EthernetTable as RawEthernet;
 use std::fmt::Display;
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
+pub struct Port {
+    pub name: String,
+    pub num_port: u16,
+    pub mac: String,
+}
+
+impl From<RawEthernet> for Port {
+    fn from(raw: RawEthernet) -> Self {
+        Port {
+            name: raw.name,
+            num_port: match raw.num_port {
+                Some(n) => n,
+                None => 0,
+            },
+            mac: raw.mac,
+        }
+    }
+}
 
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct PortStats {

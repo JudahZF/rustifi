@@ -4,6 +4,7 @@ pub mod device;
 pub mod responses;
 pub mod site;
 pub mod types;
+mod utils;
 
 use auth::sign_in;
 use reqwest::{cookie::Jar, Client};
