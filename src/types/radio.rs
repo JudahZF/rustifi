@@ -28,11 +28,10 @@ pub struct Radio {
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub enum RadioType {
+    #[default]
     N24,
     AC5,
     AX6,
-    #[default]
-    Unknown,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
@@ -46,13 +45,11 @@ pub enum RadioPowerMode {
 
 impl From<RawRadio> for Radio {
     fn from(raw: RawRadio) -> Self {
-        let mut rf_type = RadioType::Unknown;
-        if let Some(x) = raw.is_11ac {
+        let mut rf_type = RadioType::N24;
+        if let Some(_) = raw.is_11ac {
             rf_type = RadioType::AC5;
-        } else if let Some(x) = raw.is_11ax {
+        } else if let Some(_) = raw.is_11ax {
             rf_type = RadioType::AX6;
-        } else {
-            rf_type = RadioType::N24;
         }
 
         Radio {

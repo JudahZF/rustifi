@@ -1,5 +1,3 @@
-mod devices;
-pub mod stats_type;
 pub mod types;
 
 use crate::device::{models::access_points::AccessPoint, Device};
