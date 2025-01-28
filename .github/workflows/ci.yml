@@ -2,9 +2,19 @@ name: Cargo Build & Test
 
 on:
     push:
+        paths:
+            - src/**
+            - Cargo.toml
+            - tests/**
+            - .github/workflows/ci.yml
         branches:
             - main
     pull_request:
+        paths:
+            - src/**
+            - Cargo.toml
+            - tests/**
+            - .github/workflows/ci.yml
         branches:
             - main
 
