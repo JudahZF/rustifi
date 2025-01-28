@@ -2,6 +2,9 @@ name: Continuous Deployment
 
 on:
     push:
+        paths:
+            - src/**
+            - Cargo.toml
         branches:
             - main
 
