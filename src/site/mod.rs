@@ -44,7 +44,7 @@ impl Site {
                 let mut switches: Vec<Device> = Vec::new();
                 let response = match response.json::<DeviceListResponse>().await {
                     Ok(response) => response,
-                    Err(e) => panic!("{:?}", e),
+                    Err(e) => return Err(Box::new(e)),
                 };
                 for device in response.data {
                     if device.adopted {
