@@ -2,8 +2,11 @@ pub mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
+    antenna::Antenna,
     config_net::ConfigNet,
     ip::IP,
+    port::Port,
+    radio::Radio,
     system_stats::SystemStats,
     temperature::Temperature,
     uplink::Uplink,
@@ -11,41 +14,43 @@ use crate::types::{
     version::Version,
 };
 use chrono::prelude::*;
-use models::DeviceType;
+use models::APModel;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
-pub struct Device {
-    id: String,
+pub struct AccessPoint {
+    pub id: String,
     pub mac: String,
-    pub model: String,
-    pub dev_type: DeviceType,
+    pub model: APModel,
     pub name: String,
-    config_network: ConfigNet,
-    ip: IP,
-    connected_at: DateTime<Utc>,
-    provisioned_at: DateTime<Utc>,
-    disconnected_at: DateTime<Utc>,
-    startup_time: DateTime<Utc>,
-    serial: String,
-    last_seen: DateTime<Utc>,
-    next_interval: u16,
-    system_stats: Option<SystemStats>,
-    connected_network: String,
-    temperatures: Option<Vec<Temperature>>,
-    overheating: bool,
-    isolated: bool,
-    uplink: Uplink,
-    user_stats: UserStats,
-    version: Version,
+    pub config_network: ConfigNet,
+    pub ip: IP,
+    pub connected_at: DateTime<Utc>,
+    pub provisioned_at: DateTime<Utc>,
+    pub disconnected_at: DateTime<Utc>,
+    pub startup_time: DateTime<Utc>,
+    pub serial: String,
+    pub last_seen: DateTime<Utc>,
+    pub next_interval: u16,
+    pub system_stats: Option<SystemStats>,
+    pub connected_network: String,
+    pub temperatures: Option<Vec<Temperature>>,
+    pub overheating: bool,
+    pub isolated: bool,
+    pub uplink: Uplink,
+    pub user_stats: UserStats,
+    pub reboot_duration: Option<u32>,
+    pub version: Version,
+    pub antennas: Vec<Antenna>,
+    pub radios: Vec<Radio>,
+    pub ports: Vec<Port>,
 }
 
-impl From<RawDevice> for Device {
+impl From<RawDevice> for AccessPoint {
     fn from(raw: RawDevice) -> Self {
-        let device = Device {
+        let device = AccessPoint {
             id: raw.id,
             mac: raw.mac,
-            model: raw.model,
-            dev_type: DeviceType::from(raw.type_field.as_str()),
+            model: APModel::from(raw.model),
             name: raw.name,
             config_network: ConfigNet::from(raw.config_network),
             ip: IP::from(raw.ip),
@@ -113,7 +118,26 @@ impl From<RawDevice> for Device {
                 },
                 total: raw.num_sta,
             },
+            reboot_duration: match raw.reboot_duration {
+                Some(d) => Some(d),
+                None => None,
+            },
             version: Version::from(raw.version),
+            antennas: raw
+                .antenna_table
+                .iter()
+                .map(|a| Antenna::from(a.clone()))
+                .collect(),
+            radios: raw
+                .radio_table
+                .iter()
+                .map(|r| Radio::from(r.clone()))
+                .collect(),
+            ports: raw
+                .ethernet_table
+                .iter()
+                .map(|p| Port::from(p.clone()))
+                .collect(),
         };
         device
     }

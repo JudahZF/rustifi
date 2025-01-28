@@ -21,9 +21,18 @@ impl SystemStats {
 impl From<RawSystemStats> for SystemStats {
     fn from(raw: RawSystemStats) -> Self {
         SystemStats {
-            cpu: raw.cpu.parse::<f32>().unwrap(),
-            memory: raw.mem.parse::<f32>().unwrap(),
-            uptime: raw.uptime.parse::<u64>().unwrap(),
+            cpu: match raw.cpu {
+                Some(c) => c.parse::<f32>().unwrap(),
+                None => 0.0,
+            },
+            memory: match raw.mem {
+                Some(m) => m.parse::<f32>().unwrap(),
+                None => 0.0,
+            },
+            uptime: match raw.uptime {
+                Some(u) => u.parse::<u64>().unwrap(),
+                None => 0,
+            },
         }
     }
 }

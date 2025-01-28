@@ -1,5 +1,5 @@
 use dotenv;
-use rustifi::UnifiController;
+use rustifi::{device::models::access_points::models::APModel, UnifiController};
 use std::env;
 use tokio;
 
@@ -32,12 +32,14 @@ async fn main() -> Result<(), ()> {
 
     let current_site = controller.current_site.unwrap();
     let devices = current_site.clone().get_devices().await.unwrap();
-    println!("Devices: ");
-    for device in devices {
-        println!(
-            "  - {}, type: {:?}, mac: {}, model: {}",
-            device.name, device.dev_type, device.mac, device.model
-        );
+    for ap in devices.AccessPoints {
+        if ap.model == APModel::ACPro {
+            println!("----------");
+            println!("AP: {}", ap.name);
+            println!("MAC: {}", ap.mac);
+            println!("IP: {}", ap.ip);
+            println!("Serial: {}", ap.serial);
+        }
     }
     Ok(())
 }

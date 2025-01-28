@@ -1,6 +1,5 @@
-mod stat;
+use crate::responses::stat::sites::SiteListResponse;
 use crate::site::types::Site;
-use stat::sites::res_types::SiteListResponse;
 
 use reqwest::{
     cookie::{CookieStore, Jar},

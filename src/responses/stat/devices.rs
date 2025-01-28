@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DeviceListResponse {
@@ -24,7 +25,7 @@ pub struct RawDevice {
     pub board_rev: i64,
     pub setup_id: Option<String>,
     pub hw_caps: i64,
-    pub reboot_duration: Option<i64>,
+    pub reboot_duration: Option<u32>,
     pub snmp_contact: Option<String>,
     pub config_network: ConfigNetwork,
     pub syslog_key: String,
@@ -32,7 +33,6 @@ pub struct RawDevice {
     pub outdoor_mode_override: Option<String>,
     pub slimcfg_caps: Option<i64>,
     pub lcm_tracker_enabled: Option<bool>,
-    pub manufacturer_id: i64,
     pub sysid: i64,
     pub ip: String,
     pub fw2_caps: Option<i64>,
@@ -50,9 +50,9 @@ pub struct RawDevice {
     pub fw_caps: i64,
     #[serde(rename = "_id")]
     pub id: String,
-    pub internet: bool,
+    pub internet: Option<bool>,
     pub mgmt_network_id: Option<String>,
-    pub gateway_mac: String,
+    pub gateway_mac: Option<String>,
     pub external_id: String,
     pub connected_at: i64,
     pub two_phase_adopt: bool,
@@ -75,7 +75,7 @@ pub struct RawDevice {
     pub led_override: Option<String>,
     pub ether_lighting: Option<EtherLighting>,
     pub disconnected_at: i64,
-    pub architecture: String,
+    pub architecture: Option<String>,
     pub x_aes_gcm: bool,
     pub has_fan: bool,
     pub lcm_idle_timeout_override: Option<bool>,
@@ -90,7 +90,7 @@ pub struct RawDevice {
     pub adopted_by_client: Option<String>,
     pub snmp_location: Option<String>,
     pub model_in_lts: bool,
-    pub kernel_version: String,
+    pub kernel_version: Option<String>,
     pub serial: Option<String>,
     pub power_source_ctrl_enabled: Option<bool>,
     pub led_override_color_brightness: Option<i64>,
@@ -358,7 +358,7 @@ pub struct PortOverride {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct EthernetTable {
-    pub num_port: Option<i64>,
+    pub num_port: Option<u16>,
     pub name: String,
     pub mac: String,
     pub native_bond: Option<Vec<String>>,
@@ -368,7 +368,7 @@ pub struct EthernetTable {
 pub struct LastUplink {
     pub port_idx: Option<i64>,
     pub uplink_mac: String,
-    pub uplink_remote_port: Option<i64>,
+    pub uplink_remote_port: Option<u16>,
     #[serde(rename = "type")]
     pub type_field: String,
 }
@@ -397,7 +397,7 @@ pub struct SwitchCaps {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Uplink {
     pub uplink_mac: Option<String>,
-    pub uplink_remote_port: Option<i64>,
+    pub uplink_remote_port: Option<u16>,
     pub port_idx: Option<i64>,
     #[serde(rename = "type")]
     pub type_field: String,
@@ -440,42 +440,44 @@ pub struct ScanRadioTable {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AntennaTable {
-    pub wifi1_gain: Option<i64>,
+    pub wifi1_gain: Option<u16>,
     pub default: Option<bool>,
     pub name: String,
     pub id: i64,
-    pub wifi0_gain: Option<i64>,
-    pub wifi2_gain: Option<i64>,
-    pub wifi3_gain: Option<i64>,
+    pub wifi0_gain: Option<u16>,
+    pub wifi2_gain: Option<u16>,
+    pub wifi3_gain: Option<u16>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RadioTable {
-    pub antenna_gain: i64,
+    pub ht: Value,
+    pub channel: Value,
+    pub antenna_gain: u16,
     pub builtin_antenna: bool,
     pub vwire_enabled: bool,
     pub hard_noise_floor_enabled: Option<bool>,
     pub sens_level_enabled: Option<bool>,
-    pub max_txpower: i64,
+    pub max_txpower: u16,
     pub min_rssi_enabled: bool,
-    pub builtin_ant_gain: i64,
+    pub builtin_ant_gain: u16,
     pub radio: String,
-    pub nss: i64,
+    pub nss: u16,
     pub tx_power_mode: String,
-    pub min_rssi: Option<i64>,
+    pub min_rssi: Option<i16>,
     pub name: String,
-    pub min_txpower: i64,
+    pub min_txpower: u16,
     pub radio_caps: i64,
-    pub antenna_id: i64,
+    pub antenna_id: i16,
     pub radio_caps2: i64,
-    pub current_antenna_gain: i64,
+    pub current_antenna_gain: u16,
     pub has_dfs: Option<bool>,
     pub channel_optimization_enabled: Option<bool>,
     pub is_11ac: Option<bool>,
-    pub max_chan_cntr_frq: Option<i64>,
+    pub max_chan_cntr_frq: Option<u32>,
     pub has_ht160: Option<bool>,
     pub has_restricted_channels: Option<bool>,
-    pub min_chan_cntr_frq: Option<i64>,
+    pub min_chan_cntr_frq: Option<u32>,
     pub has_fccdfs: Option<bool>,
     pub backup_channel: Option<i64>,
     pub loadbalance_enabled: Option<bool>,
@@ -510,19 +512,19 @@ pub struct RadioTableStat {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SysStats {
-    pub loadavg_1: String,
-    pub loadavg_15: String,
-    pub loadavg_5: String,
-    pub mem_buffer: i64,
-    pub mem_total: i64,
-    pub mem_used: i64,
+    pub loadavg_1: Option<String>,
+    pub loadavg_15: Option<String>,
+    pub loadavg_5: Option<String>,
+    pub mem_buffer: Option<i64>,
+    pub mem_total: Option<i64>,
+    pub mem_used: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SystemStats {
-    pub cpu: String,
-    pub mem: String,
-    pub uptime: String,
+    pub cpu: Option<String>,
+    pub mem: Option<String>,
+    pub uptime: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

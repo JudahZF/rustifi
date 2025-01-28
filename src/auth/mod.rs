@@ -1,10 +1,37 @@
 use reqwest::{Client, Url};
 use serde::{Deserialize, Serialize};
+use std::{error::Error, fmt};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SignInRequest {
     username: String,
     password: String,
+}
+
+struct AuthError {
+    message: String,
+}
+
+impl AuthError {
+    fn new(message: String) -> Self {
+        Self { message }
+    }
+}
+
+impl Error for AuthError {}
+
+// Implement std::fmt::Display for AppError
+impl fmt::Display for AuthError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Failed to sign in. Got response: {}", self.message) // user-facing output
+    }
+}
+
+// Implement std::fmt::Debug for AppError
+impl fmt::Debug for AuthError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{{ file: {}, line: {} }}", file!(), line!()) // programmer-facing output
+    }
 }
 
 pub async fn sign_in(
@@ -13,7 +40,7 @@ pub async fn sign_in(
     username: String,
     password: String,
     is_udm: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), Box<dyn Error>> {
     let mut url = Url::parse((addr.clone() + "/api/login").as_str()).unwrap();
     if is_udm {
         url = Url::parse((addr.clone() + "/api/auth/login").as_str()).unwrap();
@@ -27,9 +54,8 @@ pub async fn sign_in(
     };
 
     if !response.status().is_success() {
-        panic!("Failed to sign in: {}", response.text().await?);
+        return Err(Box::new(AuthError::new(response.text().await.unwrap())));
     }
 
-    println!("{:?}", response.text().await?);
     Ok(())
 }

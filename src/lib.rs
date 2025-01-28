@@ -4,6 +4,7 @@ pub mod device;
 pub mod responses;
 pub mod site;
 pub mod types;
+mod utils;
 
 use auth::sign_in;
 use reqwest::{cookie::Jar, Client};
@@ -44,12 +45,12 @@ impl UnifiController {
 
         match sign_in(&client, &addr, username.clone(), password.clone(), is_udm).await {
             Ok(_) => {}
-            Err(_) => panic!("Unable to sign into the controller API"),
+            Err(e) => return Err(e),
         };
 
         let sites = match controller::get_sites(&client, &cookie_store, api_root.clone()).await {
             Ok(sites) => sites,
-            Err(e) => panic!("Unable to get the sites: {}", e),
+            Err(e) => return Err(e),
         };
 
         Ok(UnifiController {

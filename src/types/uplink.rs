@@ -10,6 +10,7 @@ pub struct Uplink {
     name: String,
     netmask: IP,
     port_num: u16,
+    remote_port: Option<u16>,
     up: bool,
     media: Media,
     stats: PortStats,
@@ -110,6 +111,7 @@ impl From<RawUplink> for Uplink {
                     None => true,
                 },
             },
+            remote_port: raw.uplink_remote_port,
         }
     }
 }
