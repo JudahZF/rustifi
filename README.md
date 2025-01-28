@@ -7,7 +7,7 @@ A rust API library for Unifi Controller.
 
 ## To Do
 
-- [ ] Implement some access points
+- [x] Implement some access points
 - [ ] Implement some switches
 - [ ] Ensure compliance with Rust API Guidelines Checklist, Including traits
     - Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Display, Default
@@ -21,37 +21,37 @@ A rust API library for Unifi Controller.
 
 - [ ] Devices
     - [ ] Basic Information
-    - [x] Get
-    - [ ] Update
+        - [x] Get
+        - [ ] Update
     - [ ] AP
-    - [ ] Group
-    - [x] Model
-    - [x] Name
-    - [ ] Radio
-        - [ ] Channel
-        - [ ] Width
-        - [ ] Power
-        - [ ] Meshing
-    - [ ] Number of Clients
-    - [x] CPU
-    - [x] Memory
+        - [ ] Group
+        - [x] Model
+        - [x] Name
+        - [x] Radio
+            - [x] Channel
+            - [x] Width
+            - [x] Power
+            - [ ] Meshing
+        - [x] Number of Clients
+        - [ ] CPU
+        - [ ] Memory
     - [ ] SW
-    - [x] Name
-    - [x] Model
-    - [ ] Port
-        - [ ] Number
-        - [ ] Type
-        - [ ] Status
-        - [ ] Uptime
-        - [ ] Bytes
-        - [ ] Packets
-        - [ ] Dropped
-        - [ ] Errors
-        - [ ] Native VLAN
-        - [ ] Allowed VLANs
-        - [ ] Port Isolation
-    - [x] CPU
-    - [x] Memory
+        - [x] Name
+        - [x] Model
+        - [ ] Port
+            - [ ] Number
+            - [ ] Type
+            - [ ] Status
+            - [ ] Uptime
+            - [ ] Bytes
+            - [ ] Packets
+            - [ ] Dropped
+            - [ ] Errors
+            - [ ] Native VLAN
+            - [ ] Allowed VLANs
+            - [ ] Port Isolation
+        - [x] CPU
+        - [x] Memory
 - [ ] Clients
     - [ ] Type
     - [ ] Impose Punishment
@@ -67,10 +67,12 @@ A rust API library for Unifi Controller.
 - [ ] NanoHD
 - [ ] U7-Pro
 - [ ] U7-Pro-Max
-- [ ] U6-Mesh
-- [ ] U6-Mesh-Pro
-- [ ] UWB-XG
-- [ ] UAP-XG
+- [x] U6-Mesh
+- [x] UWB-XG
+- [x] UAP-XG
+- [x] AC-Mesh
+- [x] AC-Mesh-Pro
+- [x] AC-Pro
 
 ### Switch
 
