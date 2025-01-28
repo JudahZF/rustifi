@@ -8,6 +8,7 @@ pub enum DeviceType {
     #[default]
     AccessPoint,
     DreamMachine,
+    Unknown,
 }
 
 impl std::fmt::Display for DeviceType {
@@ -16,6 +17,7 @@ impl std::fmt::Display for DeviceType {
             DeviceType::Switch => write!(f, "Switch"),
             DeviceType::AccessPoint => write!(f, "Access Point"),
             DeviceType::DreamMachine => write!(f, "Dream Machine"),
+            DeviceType::Unknown => write!(f, "Unknown"),
         }
     }
 }
@@ -26,7 +28,7 @@ impl From<&str> for DeviceType {
             "usw" => DeviceType::Switch,
             "uap" => DeviceType::AccessPoint,
             "udm" => DeviceType::DreamMachine,
-            _ => panic!("Unknown device DeviceType: {}", s),
+            _ => DeviceType::Unknown,
         }
     }
 }

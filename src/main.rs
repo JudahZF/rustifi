@@ -33,17 +33,12 @@ async fn main() -> Result<(), ()> {
     let current_site = controller.current_site.unwrap();
     let devices = current_site.clone().get_devices().await.unwrap();
     for ap in devices.AccessPoints {
-        if ap.model == APModel::BasestationXG {
+        if ap.model == APModel::ACPro {
             println!("----------");
             println!("AP: {}", ap.name);
             println!("MAC: {}", ap.mac);
             println!("IP: {}", ap.ip);
             println!("Serial: {}", ap.serial);
-            println!("Last seen: {}", ap.last_seen);
-            println!("System stats: {:?}", ap.system_stats);
-            println!("Connected network: {}", ap.connected_network);
-            println!("User stats: {:?}", ap.user_stats);
-            println!("Radio 1 Channel: {:?}", ap.radios[0].current_channel);
         }
     }
     Ok(())
