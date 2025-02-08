@@ -25,3 +25,5 @@ samples
 *_Example_*.json
 
 main.rs
+
+.DS_Store

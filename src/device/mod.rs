@@ -39,6 +39,36 @@ pub struct Device {
     version: Version,
 }
 
+impl Device {
+    pub fn update(&mut self, new: Device) -> Result<(), Box<dyn std::error::Error>> {
+        if self.id != new.id && self.mac != new.mac && self.model != new.model {
+            return Err(Box::new(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Cannot update device with different id, mac or model",
+            )));
+        }
+        self.name = new.name;
+        self.config_network = new.config_network;
+        self.ip = new.ip;
+        self.connected_at = new.connected_at;
+        self.provisioned_at = new.provisioned_at;
+        self.disconnected_at = new.disconnected_at;
+        self.startup_time = new.startup_time;
+        self.serial = new.serial;
+        self.last_seen = new.last_seen;
+        self.next_interval = new.next_interval;
+        self.system_stats = new.system_stats;
+        self.connected_network = new.connected_network;
+        self.temperatures = new.temperatures;
+        self.overheating = new.overheating;
+        self.isolated = new.isolated;
+        self.uplink = new.uplink;
+        self.user_stats = new.user_stats;
+        self.version = new.version;
+        Ok(())
+    }
+}
+
 impl From<RawDevice> for Device {
     fn from(raw: RawDevice) -> Self {
         let device = Device {

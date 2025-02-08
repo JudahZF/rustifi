@@ -13,6 +13,7 @@ A rust API library for Unifi Controller.
     - Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Display, Default
     - From, TryFrom, AsRef, AsMut
     - Errors
+- [ ] Link capacity on uplinks
 - [ ] Tests
 - [ ] Documentation
 - [ ] Examples
@@ -20,9 +21,9 @@ A rust API library for Unifi Controller.
 ## Layout & Features
 
 - [ ] Devices
-    - [ ] Basic Information
+    - [x] Basic Information
         - [x] Get
-        - [ ] Update
+        - [x] Update
     - [ ] AP
         - [ ] Group
         - [x] Model

@@ -11,8 +11,6 @@ keywords = ["unifi", "ubiquiti"]
 
 [dependencies]
 chrono = "0.4.39"
-dotenv = "0.15.0"
 reqwest = { version = "0.12.5", features = ["cookies", "json"] }
 serde = { version = "1.0.204", features = ["derive", "serde_derive"] }
 serde_json = "1.0.120"
-tokio = { version = "1.38.1", features = ["full"] }
