@@ -1,7 +1,7 @@
 [package]
 name = "rustifi"
 version = "0.3.0"
-edition = "2021"
+edition = "2024"
 authors = ["Judah Fuller <judah@judahfuller.com>"]
 description = "Open source rust library to interface with Ubiquiti's Unifi Controller."
 license = "MIT"
