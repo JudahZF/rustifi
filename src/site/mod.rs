@@ -1,6 +1,6 @@
 pub mod types;
 
-use crate::device::{models::access_points::AccessPoint, Device};
+use crate::device::{AccessPoint, Device};
 use crate::responses::stat::devices::DeviceListResponse;
 use reqwest::{
     cookie::{CookieStore, Jar},
@@ -11,8 +11,8 @@ use types::Site;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct ReturnedDevices {
-    pub AccessPoints: Vec<AccessPoint>,
-    pub Switches: Vec<Device>,
+    pub access_points: Vec<AccessPoint>,
+    pub switches: Vec<Device>,
 }
 
 impl Site {
@@ -56,8 +56,8 @@ impl Site {
                     }
                 }
                 return Ok(ReturnedDevices {
-                    AccessPoints: aps,
-                    Switches: switches,
+                    access_points: aps,
+                    switches: switches,
                 });
             }
             Err(e) => return Err(Box::new(e)),

@@ -1,20 +1,13 @@
-pub mod models;
+mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
-    antenna::Antenna,
-    config_net::ConfigNet,
-    ip::IP,
-    port::Port,
-    radio::Radio,
-    system_stats::SystemStats,
-    temperature::Temperature,
-    uplink::Uplink,
-    user_stats::{InterfaceUserStats, UserStats},
-    version::Version,
+    Antenna, ConfigNet, InterfaceUserStats, Port, Radio, SystemStats, Temperature, Uplink,
+    UserStats, Version, IP,
 };
 use chrono::prelude::*;
-use models::APModel;
+
+pub use models::APModel;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct AccessPoint {

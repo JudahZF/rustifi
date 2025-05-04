@@ -1,17 +1,13 @@
-pub mod models;
+mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
-    config_net::ConfigNet,
-    ip::IP,
-    system_stats::SystemStats,
-    temperature::Temperature,
-    uplink::Uplink,
-    user_stats::{InterfaceUserStats, UserStats},
-    version::Version,
+    ConfigNet, InterfaceUserStats, SystemStats, Temperature, Uplink, UserStats, Version, IP,
 };
 use chrono::prelude::*;
 use models::DeviceType;
+
+pub use models::{APModel, AccessPoint};
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct Device {
