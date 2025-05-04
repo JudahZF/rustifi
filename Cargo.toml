@@ -8,6 +8,15 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/JudahZF/rustifi"
 keywords = ["unifi", "ubiquiti"]
+exclude = [
+    ".github/*",
+    "tests/*",
+    "CLAUDE.md",
+    "cliff.toml",
+    "release-plz.toml",
+    "sailr.json",
+]
+
 
 [dependencies]
 chrono = "0.4.39"
