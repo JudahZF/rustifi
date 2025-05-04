@@ -14,10 +14,7 @@ pub struct Antenna {
 impl From<RawAntenna> for Antenna {
     fn from(raw: RawAntenna) -> Self {
         Antenna {
-            default: match raw.default {
-                Some(b) => b,
-                None => false,
-            },
+            default: raw.default.unwrap_or_default(),
             name: raw.name,
             id: raw.id,
             wifi0_gain: raw.wifi0_gain,

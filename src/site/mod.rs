@@ -48,19 +48,19 @@ impl Site {
                 };
                 for device in response.data {
                     if device.adopted {
-                        if device.type_field == "uap".to_string() {
+                        if device.type_field == *"uap" {
                             aps.push(AccessPoint::from(device));
                         } else {
                             switches.push(Device::from(device));
                         }
                     }
                 }
-                return Ok(ReturnedDevices {
+                Ok(ReturnedDevices {
                     access_points: aps,
-                    switches: switches,
-                });
+                    switches,
+                })
             }
-            Err(e) => return Err(Box::new(e)),
-        };
+            Err(e) => Err(Box::new(e)),
+        }
     }
 }
