@@ -26,4 +26,4 @@ serde_json = "1.0.120"
 
 [dev-dependencies]
 mockito = "1.6.1"
-tokio = { version = "1.43.0", features = ["full"] }
+tokio = { version = "1.45.0", features = ["full"] }
