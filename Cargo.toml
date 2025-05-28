@@ -20,7 +20,7 @@ exclude = [
 
 [dependencies]
 chrono = "0.4.39"
-reqwest = { version = "0.12.5", features = ["cookies", "json"] }
+reqwest = { version = "0.12.16", features = ["cookies", "json"] }
 serde = { version = "1.0.204", features = ["derive", "serde_derive"] }
 serde_json = "1.0.120"
 
