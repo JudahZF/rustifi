@@ -2,6 +2,8 @@ use crate::{
     responses::stat::devices::RadioTable as RawRadio, utils::channel_conversion::freq_to_channel,
 };
 
+use std::fmt;
+
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub struct Radio {
     pub antenna_gain: u16,
@@ -34,6 +36,16 @@ pub enum RadioType {
     AX6,
 }
 
+impl fmt::Display for RadioType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match &self {
+            RadioType::N24 => write!(f, "N24"),
+            RadioType::AC5 => write!(f, "AC5"),
+            RadioType::AX6 => write!(f, "AX6"),
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub enum RadioPowerMode {
     Low,
@@ -46,9 +58,9 @@ pub enum RadioPowerMode {
 impl From<RawRadio> for Radio {
     fn from(raw: RawRadio) -> Self {
         let mut rf_type = RadioType::N24;
-        if let Some(_) = raw.is_11ac {
+        if raw.is_11ac.is_some() {
             rf_type = RadioType::AC5;
-        } else if let Some(_) = raw.is_11ax {
+        } else if raw.is_11ax.is_some() {
             rf_type = RadioType::AX6;
         }
 
@@ -60,23 +72,14 @@ impl From<RawRadio> for Radio {
                 Some(c) => c.try_into().unwrap(),
                 None => 0,
             },
-            channel_optimization_enabled: match raw.channel_optimization_enabled {
-                Some(enabled) => enabled,
-                None => false,
-            },
+            channel_optimization_enabled: raw.channel_optimization_enabled.unwrap_or_default(),
             current_channel: match raw.channel.as_u64() {
                 Some(c) => c.try_into().unwrap(),
                 None => 0,
             },
             current_gain: raw.current_antenna_gain,
-            has_dfs: match raw.has_dfs {
-                Some(enabled) => enabled,
-                None => false,
-            },
-            has_fccdfs: match raw.has_fccdfs {
-                Some(enabled) => enabled,
-                None => false,
-            },
+            has_dfs: raw.has_dfs.unwrap_or_default(),
+            has_fccdfs: raw.has_fccdfs.unwrap_or_default(),
             antenna_id: raw.antenna_id,
             radio_type: rf_type,
             max_channel: match raw.max_chan_cntr_frq {
@@ -89,10 +92,7 @@ impl From<RawRadio> for Radio {
                 None => 0,
             },
             min_power: raw.min_txpower,
-            min_rssi: match raw.min_rssi {
-                Some(rssi) => rssi,
-                None => -120,
-            },
+            min_rssi: raw.min_rssi.unwrap_or(-120),
             min_rssi_enabled: raw.min_rssi_enabled,
             name: raw.name,
             spacial_streams: raw.nss,
@@ -181,9 +181,9 @@ mod tests {
         assert_eq!(radio.has_fccdfs, false);
         assert_eq!(radio.antenna_id, 1);
         assert_eq!(radio.radio_type, RadioType::AC5);
-        assert_eq!(radio.max_channel, 165);  // 5825 MHz maps to channel 165
+        assert_eq!(radio.max_channel, 165); // 5825 MHz maps to channel 165
         assert_eq!(radio.max_power, 23);
-        assert_eq!(radio.min_channel, 36);   // 5170 MHz maps to channel 36
+        assert_eq!(radio.min_channel, 36); // 5170 MHz maps to channel 36
         assert_eq!(radio.min_power, 8);
         assert_eq!(radio.min_rssi, -75);
         assert_eq!(radio.min_rssi_enabled, true);

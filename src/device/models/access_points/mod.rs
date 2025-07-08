@@ -1,20 +1,13 @@
-pub mod models;
+mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
-    antenna::Antenna,
-    config_net::ConfigNet,
-    ip::IP,
-    port::Port,
-    radio::Radio,
-    system_stats::SystemStats,
-    temperature::Temperature,
-    uplink::Uplink,
-    user_stats::{InterfaceUserStats, UserStats},
-    version::Version,
+    Antenna, ConfigNet, InterfaceUserStats, Port, Radio, SystemStats, Temperature, Uplink,
+    UserStats, Version, IP,
 };
 use chrono::prelude::*;
-use models::APModel;
+
+pub use models::APModel;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub struct AccessPoint {
@@ -94,18 +87,12 @@ impl From<RawDevice> for AccessPoint {
             disconnected_at: DateTime::from_timestamp(raw.disconnected_at, 0)
                 .expect("Invalid timestamp"),
             startup_time: DateTime::from_timestamp(
-                match raw.startup_timestamp {
-                    Some(ts) => ts,
-                    None => 0,
-                },
+                raw.startup_timestamp.unwrap_or_default(),
                 0,
             )
             .expect("Invalid timestamp"),
             last_seen: DateTime::from_timestamp(
-                match raw.last_seen {
-                    Some(ts) => ts,
-                    None => 0,
-                },
+                raw.last_seen.unwrap_or_default(),
                 0,
             )
             .expect("Invalid timestamp"),
@@ -113,49 +100,28 @@ impl From<RawDevice> for AccessPoint {
                 Some(s) => s,
                 None => "".to_string(),
             },
-            next_interval: match raw.next_interval {
-                Some(i) => i,
-                None => 30,
-            },
-            system_stats: (match raw.system_stats {
-                Some(s) => Some(SystemStats::from(s)),
-                None => None,
-            }),
+            next_interval: raw.next_interval.unwrap_or(30),
+            system_stats: raw.system_stats.map(SystemStats::from),
             connected_network: match raw.connection_network_name {
                 Some(n) => n,
                 None => "".to_string(),
             },
             temperatures: None,
-            overheating: match raw.overheating {
-                Some(o) => o,
-                None => false,
-            },
-            isolated: match raw.isolated {
-                Some(i) => i,
-                None => false,
-            },
+            overheating: raw.overheating.unwrap_or_default(),
+            isolated: raw.isolated.unwrap_or_default(),
             uplink: Uplink::from(raw.uplink),
             user_stats: UserStats {
                 users: InterfaceUserStats {
                     total: raw.user_num_sta,
-                    wlan: match raw.user_wlan_num_sta {
-                        Some(i) => i,
-                        None => 0,
-                    },
+                    wlan: raw.user_wlan_num_sta.unwrap_or_default(),
                 },
                 guests: InterfaceUserStats {
                     total: raw.guest_num_sta,
-                    wlan: match raw.guest_wlan_num_sta {
-                        Some(i) => i,
-                        None => 0,
-                    },
+                    wlan: raw.guest_wlan_num_sta.unwrap_or_default(),
                 },
                 total: raw.num_sta,
             },
-            reboot_duration: match raw.reboot_duration {
-                Some(d) => Some(d),
-                None => None,
-            },
+            reboot_duration: raw.reboot_duration,
             version: Version::from(raw.version),
             antennas: raw
                 .antenna_table

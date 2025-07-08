@@ -1,6 +1,6 @@
-pub mod access_points;
+mod access_points;
 
-use std::fmt::Display;
+pub use access_points::{APModel, AccessPoint};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub enum DeviceType {

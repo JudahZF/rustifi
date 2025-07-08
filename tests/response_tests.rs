@@ -1,7 +1,7 @@
 #![recursion_limit = "512"]
 use rustifi::{
     responses::stat::devices::{DeviceListResponse, RadioTable},
-    types::radio::{Radio, RadioPowerMode, RadioType},
+    types::{Radio, RadioPowerMode, RadioType},
 };
 use serde_json::json;
 
@@ -218,7 +218,7 @@ fn test_device_list_response_deserialize() {
 
     // Check radio table
     assert_eq!(device.radio_table.len(), 2);
-    
+
     // First radio
     let radio0 = &device.radio_table[0];
     assert_eq!(radio0.radio, "ng");
@@ -226,7 +226,7 @@ fn test_device_list_response_deserialize() {
     assert_eq!(radio0.antenna_gain, 6);
     assert_eq!(radio0.nss, 2);
     assert_eq!(radio0.tx_power_mode, "low");
-    
+
     // Second radio
     let radio1 = &device.radio_table[1];
     assert_eq!(radio1.radio, "na");

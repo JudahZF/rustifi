@@ -1,5 +1,5 @@
-use rustifi::types::ip::IP;
-use rustifi::types::radio::{RadioPowerMode, RadioType};
+use rustifi::types::IP;
+use rustifi::types::{RadioPowerMode, RadioType};
 
 #[test]
 fn test_ip_from_string() {

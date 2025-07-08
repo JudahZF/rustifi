@@ -41,75 +41,27 @@ impl From<RawUplink> for Uplink {
                 Some(n) => n,
                 None => "0.0.0.0".to_string(),
             }),
-            port_num: match raw.num_port {
-                Some(i) => i,
-                None => 0,
-            },
-            up: match raw.up {
-                Some(b) => b,
-                None => true,
-            },
+            port_num: raw.num_port.unwrap_or_default(),
+            up: raw.up.unwrap_or(true),
             media: match raw.media {
                 Some(s) => Media::from(s),
                 None => Media::GigabitEthernet,
             },
             stats: PortStats {
-                rx_bytes: match raw.rx_bytes {
-                    Some(u) => u,
-                    None => 0,
-                },
-                tx_bytes: match raw.tx_bytes {
-                    Some(u) => u,
-                    None => 0,
-                },
-                rx_packets: match raw.rx_packets {
-                    Some(u) => u,
-                    None => 0,
-                },
-                tx_packets: match raw.tx_packets {
-                    Some(u) => u,
-                    None => 0,
-                },
-                rx_errors: match raw.rx_errors {
-                    Some(u) => u,
-                    None => 0,
-                },
-                tx_errors: match raw.tx_errors {
-                    Some(u) => u,
-                    None => 0,
-                },
-                rx_dropped: match raw.rx_dropped {
-                    Some(u) => u,
-                    None => 0,
-                },
-                tx_dropped: match raw.tx_dropped {
-                    Some(u) => u,
-                    None => 0,
-                },
-                rx_multicast: match raw.rx_multicast {
-                    Some(u) => u,
-                    None => 0,
-                },
-                rx_rate: match raw.rx_bytes_r {
-                    Some(f) => f,
-                    None => 0.0,
-                },
-                tx_rate: match raw.tx_bytes_r {
-                    Some(f) => f,
-                    None => 0.0,
-                },
-                speed: match raw.speed {
-                    Some(u) => u,
-                    None => 0,
-                },
-                max_speed: match raw.max_speed {
-                    Some(u) => u,
-                    None => 0,
-                },
-                full_duplex: match raw.full_duplex {
-                    Some(b) => b,
-                    None => true,
-                },
+                rx_bytes: raw.rx_bytes.unwrap_or_default(),
+                tx_bytes: raw.tx_bytes.unwrap_or_default(),
+                rx_packets: raw.rx_packets.unwrap_or_default(),
+                tx_packets: raw.tx_packets.unwrap_or_default(),
+                rx_errors: raw.rx_errors.unwrap_or_default(),
+                tx_errors: raw.tx_errors.unwrap_or_default(),
+                rx_dropped: raw.rx_dropped.unwrap_or_default(),
+                tx_dropped: raw.tx_dropped.unwrap_or_default(),
+                rx_multicast: raw.rx_multicast.unwrap_or_default(),
+                rx_rate: raw.rx_bytes_r.unwrap_or(0.0),
+                tx_rate: raw.tx_bytes_r.unwrap_or(0.0),
+                speed: raw.speed.unwrap_or_default(),
+                max_speed: raw.max_speed.unwrap_or_default(),
+                full_duplex: raw.full_duplex.unwrap_or(true),
             },
             remote_port: raw.uplink_remote_port,
         }
