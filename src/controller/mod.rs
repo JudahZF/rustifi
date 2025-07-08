@@ -15,8 +15,8 @@ pub async fn get_sites(
     let url = Url::parse((addr.clone() + "/stat/sites").as_str()).unwrap();
     let cookies = jar.cookies(&url);
     let mut headers = HeaderMap::new();
-    if cookies.is_some() {
-        headers.insert("Cookie", cookies.unwrap());
+    if let Some(cookies) = cookies {
+        headers.insert("Cookie", cookies);
     }
     match client.get(url).headers(headers.clone()).send().await {
         Ok(response) => {
@@ -34,8 +34,8 @@ pub async fn get_sites(
                     cookies: None,
                 });
             }
-            return Ok(sites);
+            Ok(sites)
         }
-        Err(e) => return Err(Box::new(e)),
-    };
+        Err(e) => Err(Box::new(e)),
+    }
 }

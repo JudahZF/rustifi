@@ -1,16 +1,29 @@
 [package]
 name = "rustifi"
-version = "0.2.2"
-edition = "2021"
+version = "0.3.0"
+edition = "2024"
 authors = ["Judah Fuller <judah@judahfuller.com>"]
 description = "Open source rust library to interface with Ubiquiti's Unifi Controller."
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/JudahZF/rustifi"
 keywords = ["unifi", "ubiquiti"]
+exclude = [
+    ".github/*",
+    "tests/*",
+    "CLAUDE.md",
+    "cliff.toml",
+    "release-plz.toml",
+    "sailr.json",
+]
+
 
 [dependencies]
 chrono = "0.4.39"
-reqwest = { version = "0.12.5", features = ["cookies", "json"] }
+reqwest = { version = "0.12.21", features = ["cookies", "json"] }
 serde = { version = "1.0.204", features = ["derive", "serde_derive"] }
 serde_json = "1.0.120"
+
+[dev-dependencies]
+mockito = "1.6.1"
+tokio = { version = "1.43.0", features = ["full"] }

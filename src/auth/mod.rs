@@ -36,14 +36,14 @@ impl fmt::Debug for AuthError {
 
 pub async fn sign_in(
     client: &Client,
-    addr: &String,
+    addr: &str,
     username: String,
     password: String,
     is_udm: bool,
 ) -> Result<(), Box<dyn Error>> {
-    let mut url = Url::parse((addr.clone() + "/api/login").as_str()).unwrap();
+    let mut url = Url::parse(format!("{}/api/login", addr).as_str()).unwrap();
     if is_udm {
-        url = Url::parse((addr.clone() + "/api/auth/login").as_str()).unwrap();
+        url = Url::parse(format!("{}/api/auth/login", addr).as_str()).unwrap();
     }
     println!("Signing in to {}", url);
     let data: SignInRequest = SignInRequest { username, password };

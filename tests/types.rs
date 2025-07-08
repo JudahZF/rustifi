@@ -1,4 +1,4 @@
-use rustifi::types::ip::IP;
+use rustifi::types::IP;
 
 #[test]
 fn test_ip() {

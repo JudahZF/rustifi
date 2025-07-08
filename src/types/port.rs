@@ -12,10 +12,7 @@ impl From<RawEthernet> for Port {
     fn from(raw: RawEthernet) -> Self {
         Port {
             name: raw.name,
-            num_port: match raw.num_port {
-                Some(n) => n,
-                None => 0,
-            },
+            num_port: raw.num_port.unwrap_or_default(),
             mac: raw.mac,
         }
     }

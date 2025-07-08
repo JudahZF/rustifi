@@ -12,8 +12,8 @@ use site::types::Site;
 use std::sync::Arc;
 
 pub struct UnifiController {
-    addr: String,
-    api_root: String,
+    // addr: String,
+    // api_root: String,
     cookie_store: Arc<Jar>,
     client: Client,
     sites: Vec<Site>,
@@ -54,9 +54,9 @@ impl UnifiController {
         };
 
         Ok(UnifiController {
-            addr,
+            // addr,
             cookie_store,
-            api_root,
+            // api_root,
             client,
             sites,
             current_site: None,
