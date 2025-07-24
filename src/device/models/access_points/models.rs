@@ -10,6 +10,9 @@ pub enum APModel {
     #[default]
     Unknown,
     XG,
+    U7ProXGS,
+    U7ProOutdoor,
+    E7Campus,
 }
 
 impl From<String> for APModel {
@@ -21,7 +24,13 @@ impl From<String> for APModel {
             "U7MP" => APModel::ACMeshPro,
             "UCXG" => APModel::XG,
             "U7PG2" => APModel::ACPro,
-            _ => APModel::Unknown,
+            "UAPA6A4" => APModel::U7ProXGS,
+            "UAPA6B0" => APModel::U7ProOutdoor,
+            "UAPA6B1" => APModel::E7Campus,
+            _ => {
+                println!("Unknown model: {}", s);
+                APModel::Unknown
+            }
         }
     }
 }
@@ -35,6 +44,9 @@ impl Display for APModel {
             APModel::ACMeshPro => write!(f, "ACMesh Pro"),
             APModel::ACPro => write!(f, "AC Pro"),
             APModel::XG => write!(f, "XG"),
+            APModel::E7Campus => write!(f, "E7 Campus"),
+            APModel::U7ProXGS => write!(f, "U7 Pro XGS"),
+            APModel::U7ProOutdoor => write!(f, "U7 Pro Outdoor"),
             APModel::Unknown => write!(f, "Unknown"),
         }
     }

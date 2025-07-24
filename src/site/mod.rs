@@ -3,9 +3,9 @@ pub mod types;
 use crate::device::{AccessPoint, Device};
 use crate::responses::stat::devices::DeviceListResponse;
 use reqwest::{
+    Client, Url,
     cookie::{CookieStore, Jar},
     header::HeaderMap,
-    Client, Url,
 };
 use types::Site;
 
@@ -39,7 +39,6 @@ impl Site {
             .await
         {
             Ok(response) => {
-                //print!("{:?}", response.text().await?);
                 let mut aps: Vec<AccessPoint> = Vec::new();
                 let mut switches: Vec<Device> = Vec::new();
                 let response = match response.json::<DeviceListResponse>().await {

@@ -4,10 +4,10 @@ pub mod device;
 pub mod responses;
 pub mod site;
 pub mod types;
-mod utils;
+pub mod utils;
 
 use auth::sign_in;
-use reqwest::{cookie::Jar, Client};
+use reqwest::{Client, cookie::Jar};
 use site::types::Site;
 use std::sync::Arc;
 

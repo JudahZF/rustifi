@@ -14,92 +14,92 @@ pub struct Meta {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RawDevice {
-    pub required_version: String,
-    pub port_table: Vec<PortTable>,
+    pub required_version: Option<String>,
+    pub port_table: Option<Vec<PortTable>>,
     #[serde(rename = "heightInMeters")]
     pub height_in_meters: Option<f64>,
-    pub license_state: String,
+    pub license_state: Option<String>,
     pub lcm_brightness_override: Option<bool>,
     #[serde(rename = "type")]
     pub type_field: String,
-    pub board_rev: i64,
+    pub board_rev: Option<i64>,
     pub setup_id: Option<String>,
-    pub hw_caps: i64,
+    pub hw_caps: Option<i64>,
     pub reboot_duration: Option<u32>,
     pub snmp_contact: Option<String>,
     pub config_network: ConfigNetwork,
-    pub syslog_key: String,
+    pub syslog_key: Option<String>,
     pub model: String,
     pub outdoor_mode_override: Option<String>,
     pub slimcfg_caps: Option<i64>,
     pub lcm_tracker_enabled: Option<bool>,
-    pub sysid: i64,
+    pub sysid: Option<i64>,
     pub ip: String,
     pub fw2_caps: Option<i64>,
     pub jumboframe_enabled: Option<bool>,
     pub last_connection_network_name: Option<String>,
     pub led_override_color: Option<String>,
     pub version: String,
-    pub unsupported_reason: i64,
-    pub adoption_completed: bool,
+    pub unsupported_reason: Option<i64>,
+    pub adoption_completed: Option<bool>,
     pub anon_id: Option<String>,
     pub stp_version: Option<String>,
     pub last_connection_network_id: Option<String>,
-    pub site_id: String,
+    pub site_id: Option<String>,
     pub name: String,
-    pub fw_caps: i64,
+    pub fw_caps: Option<i64>,
     #[serde(rename = "_id")]
     pub id: String,
     pub internet: Option<bool>,
     pub mgmt_network_id: Option<String>,
     pub gateway_mac: Option<String>,
-    pub external_id: String,
+    pub external_id: Option<String>,
     pub connected_at: i64,
-    pub two_phase_adopt: bool,
+    pub two_phase_adopt: Option<bool>,
     #[serde(default)]
-    pub port_overrides: Vec<PortOverride>,
-    pub inform_ip: String,
-    pub cfgversion: String,
+    pub port_overrides: Option<Vec<PortOverride>>,
+    pub inform_ip: Option<String>,
+    pub cfgversion: Option<String>,
     pub mac: String,
     pub provisioned_at: i64,
-    pub inform_url: String,
+    pub inform_url: Option<String>,
     pub ethernet_table: Vec<EthernetTable>,
     pub upgrade_duration: Option<i64>,
     pub flowctrl_enabled: Option<bool>,
-    pub unsupported: bool,
-    pub sys_error_caps: i64,
-    pub ble_caps: i64,
-    pub dot1x_portctrl_enabled: bool,
+    pub unsupported: Option<bool>,
+    pub sys_error_caps: Option<i64>,
+    pub ble_caps: Option<i64>,
+    pub dot1x_portctrl_enabled: Option<bool>,
     pub map_id: Option<String>,
     pub last_uplink: LastUplink,
     pub led_override: Option<String>,
     pub ether_lighting: Option<EtherLighting>,
     pub disconnected_at: i64,
     pub architecture: Option<String>,
-    pub x_aes_gcm: bool,
-    pub has_fan: bool,
+    pub x_aes_gcm: Option<bool>,
+    pub has_fan: Option<bool>,
     pub lcm_idle_timeout_override: Option<bool>,
-    pub model_incompatible: bool,
-    pub x_authkey: String,
+    pub model_incompatible: Option<bool>,
+    pub x_authkey: Option<String>,
     pub satisfaction: Option<i64>,
     pub x_ssh_hostkey_fingerprint: Option<String>,
-    pub model_in_eol: bool,
+    pub model_in_eol: Option<bool>,
     pub anomalies: Option<i64>,
-    pub has_temperature: bool,
+    pub has_temperature: Option<bool>,
     pub switch_caps: SwitchCaps,
     pub adopted_by_client: Option<String>,
     pub snmp_location: Option<String>,
-    pub model_in_lts: bool,
+    pub model_in_lts: Option<bool>,
     pub kernel_version: Option<String>,
     pub serial: Option<String>,
     pub power_source_ctrl_enabled: Option<bool>,
     pub led_override_color_brightness: Option<i64>,
     pub adopted: bool,
     pub hash_id: Option<String>,
-    pub device_id: String,
+    pub device_id: Option<String>,
     pub uplink: Uplink,
-    pub state: i64,
-    pub start_disconnected_millis: i64,
+    pub state: Option<i64>,
+    pub start_disconnected_millis: Option<i64>,
     pub upgrade_state: Option<i64>,
     pub num_sta: u64,
     #[serde(rename = "user-num_sta")]
@@ -109,14 +109,14 @@ pub struct RawDevice {
     pub tx_bytes: Option<i64>,
     pub rx_bytes: Option<i64>,
     pub bytes: Option<i64>,
-    pub x_has_ssh_hostkey: bool,
+    pub x_has_ssh_hostkey: Option<bool>,
     pub has_speaker: Option<bool>,
     pub mesh_sta_vap_enabled: Option<bool>,
     pub multi_active_antennas: Option<bool>,
     pub bandsteering_mode: Option<String>,
     pub support_wifi6e: Option<bool>,
     #[serde(default)]
-    pub scan_radio_table: Vec<ScanRadioTable>,
+    pub scan_radio_table: Option<Vec<ScanRadioTable>>,
     pub x_vwirekey: Option<String>,
     pub supports_fingerprint_ml: Option<bool>,
     pub country_code: Option<i64>,
@@ -134,7 +134,7 @@ pub struct RawDevice {
     #[serde(rename = "vwireEnabled")]
     pub vwire_enabled: Option<bool>,
     #[serde(default)]
-    pub radio_table_stats: Vec<RadioTableStat>,
+    pub radio_table_stats: Option<Vec<RadioTableStat>>,
     #[serde(rename = "user-wlan-num_sta")]
     pub user_wlan_num_sta: Option<u64>,
     #[serde(rename = "guest-wlan-num_sta")]
@@ -148,7 +148,7 @@ pub struct RawDevice {
     pub shortname: Option<String>,
     pub service_mac: Option<String>,
     #[serde(default)]
-    pub ipv6: Vec<String>,
+    pub ipv6: Option<Vec<String>>,
     pub last_seen: Option<i64>,
     pub min_inform_interval_seconds: Option<i64>,
     pub upgradable: Option<bool>,
@@ -165,7 +165,7 @@ pub struct RawDevice {
     #[serde(rename = "system-stats")]
     pub system_stats: Option<SystemStats>,
     #[serde(default)]
-    pub lldp_table: Vec<LldpTable>,
+    pub lldp_table: Option<Vec<LldpTable>>,
     pub displayable_version: Option<String>,
     pub connection_network_id: Option<String>,
     pub connection_network_name: Option<String>,
@@ -177,7 +177,7 @@ pub struct RawDevice {
     pub overheating: Option<bool>,
     pub total_max_power: Option<i64>,
     #[serde(default)]
-    pub downlink_table: Vec<DownlinkTable>,
+    pub downlink_table: Option<Vec<DownlinkTable>>,
     pub uplink_depth: Option<i64>,
     pub total_used_power: Option<f64>,
     pub detailed_states: Option<DetailedStates>,
@@ -219,17 +219,17 @@ pub struct RawDevice {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PortTable {
-    pub port_idx: i64,
+    pub port_idx: Option<i64>,
     pub media: Option<String>,
     pub port_poe: Option<bool>,
     pub poe_caps: Option<i64>,
-    pub speed_caps: i64,
-    pub op_mode: String,
-    pub forward: String,
-    pub name: String,
-    pub enable: bool,
-    pub masked: bool,
-    pub aggregated_by: bool,
+    pub speed_caps: Option<i64>,
+    pub op_mode: Option<String>,
+    pub forward: Option<String>,
+    pub name: Option<String>,
+    pub enable: Option<bool>,
+    pub masked: Option<bool>,
+    pub aggregated_by: Option<bool>,
     pub poe_mode: Option<String>,
     pub setting_preference: Option<String>,
     pub port_security_enabled: Option<bool>,
@@ -239,7 +239,7 @@ pub struct PortTable {
     pub voice_networkconf_id: Option<String>,
     pub stp_port_mode: Option<bool>,
     #[serde(default)]
-    pub excluded_networkconf_ids: Vec<String>,
+    pub excluded_networkconf_ids: Option<Vec<String>>,
     pub port_keepalive_enabled: Option<bool>,
     pub native_networkconf_id: Option<String>,
     pub autoneg: Option<bool>,
@@ -307,8 +307,8 @@ pub struct PortTable {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PortDelta {
-    pub time_delta: f64,
-    pub time_delta_activity: f64,
+    pub time_delta: Option<f64>,
+    pub time_delta_activity: Option<f64>,
     pub tx_bytes: Option<i64>,
     pub rx_bytes: Option<i64>,
     pub tx_packets: Option<i64>,
@@ -338,12 +338,12 @@ pub struct PortOverride {
     pub egress_rate_limit_kbps_enabled: Option<bool>,
     pub isolation: Option<bool>,
     pub tagged_vlan_mgmt: Option<String>,
-    pub port_idx: i64,
+    pub port_idx: Option<i64>,
     pub voice_networkconf_id: Option<String>,
     pub stp_port_mode: Option<bool>,
     pub port_keepalive_enabled: Option<bool>,
     #[serde(default)]
-    pub excluded_networkconf_ids: Vec<String>,
+    pub excluded_networkconf_ids: Option<Vec<String>>,
     pub full_duplex: Option<bool>,
     pub native_networkconf_id: Option<String>,
     pub name: Option<String>,
@@ -367,10 +367,10 @@ pub struct EthernetTable {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LastUplink {
     pub port_idx: Option<i64>,
-    pub uplink_mac: String,
+    pub uplink_mac: Option<String>,
     pub uplink_remote_port: Option<u16>,
     #[serde(rename = "type")]
-    pub type_field: String,
+    pub type_field: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -400,7 +400,7 @@ pub struct Uplink {
     pub uplink_remote_port: Option<u16>,
     pub port_idx: Option<i64>,
     #[serde(rename = "type")]
-    pub type_field: String,
+    pub type_field: Option<String>,
     pub full_duplex: Option<bool>,
     pub ip: Option<String>,
     pub mac: Option<String>,
@@ -432,10 +432,10 @@ pub struct Uplink {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ScanRadioTable {
-    pub name: String,
-    pub radio_caps: i64,
-    pub radio_caps2: i64,
-    pub radio: String,
+    pub name: Option<String>,
+    pub radio_caps: Option<i64>,
+    pub radio_caps2: Option<i64>,
+    pub radio: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -467,9 +467,9 @@ pub struct RadioTable {
     pub min_rssi: Option<i16>,
     pub name: String,
     pub min_txpower: u16,
-    pub radio_caps: i64,
+    pub radio_caps: Option<i64>,
     pub antenna_id: i16,
-    pub radio_caps2: i64,
+    pub radio_caps2: Option<i64>,
     pub current_antenna_gain: u16,
     pub has_dfs: Option<bool>,
     pub channel_optimization_enabled: Option<bool>,
@@ -487,23 +487,23 @@ pub struct RadioTable {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RadioTableStat {
-    pub name: String,
-    pub last_channel: i64,
-    pub radio: String,
+    pub name: Option<String>,
+    pub last_channel: Option<i64>,
+    pub radio: Option<String>,
     pub ast_be_xmit: Option<i64>,
-    pub cu_total: i64,
-    pub cu_self_rx: i64,
-    pub cu_self_tx: i64,
-    pub gain: i64,
-    pub satisfaction: i64,
-    pub state: String,
-    pub tx_packets: i64,
-    pub tx_retries: i64,
-    pub num_sta: u64,
+    pub cu_total: Option<i64>,
+    pub cu_self_rx: Option<i64>,
+    pub cu_self_tx: Option<i64>,
+    pub gain: Option<i64>,
+    pub satisfaction: Option<i64>,
+    pub state: Option<String>,
+    pub tx_packets: Option<i64>,
+    pub tx_retries: Option<i64>,
+    pub num_sta: Option<u64>,
     #[serde(rename = "guest-num_sta")]
-    pub guest_num_sta: u64,
+    pub guest_num_sta: Option<u64>,
     #[serde(rename = "user-num_sta")]
-    pub user_num_sta: u64,
+    pub user_num_sta: Option<u64>,
     pub channel: Option<i64>,
     pub extchannel: Option<i64>,
     pub tx_power: Option<i64>,
@@ -529,22 +529,22 @@ pub struct SystemStats {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LldpTable {
-    pub chassis_id: String,
+    pub chassis_id: Option<String>,
     pub chassis_id_subtype: Option<String>,
-    pub is_wired: bool,
-    pub local_port_idx: i64,
-    pub local_port_name: String,
-    pub port_id: String,
+    pub is_wired: Option<bool>,
+    pub local_port_idx: Option<i64>,
+    pub local_port_name: Option<String>,
+    pub port_id: Option<String>,
     pub power_allocated: Option<i64>,
     pub power_requested: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DownlinkTable {
-    pub mac: String,
-    pub port_idx: i64,
-    pub speed: i64,
-    pub full_duplex: bool,
+    pub mac: Option<String>,
+    pub port_idx: Option<i64>,
+    pub speed: Option<i64>,
+    pub full_duplex: Option<bool>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -561,29 +561,29 @@ pub struct Stat {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Sw {
-    pub site_id: String,
-    pub o: String,
-    pub oid: String,
-    pub sw: String,
-    pub time: i64,
-    pub datetime: String,
-    pub rx_packets: f64,
-    pub rx_bytes: f64,
-    pub rx_errors: f64,
-    pub rx_dropped: f64,
-    pub rx_crypts: f64,
-    pub rx_frags: f64,
-    pub tx_packets: f64,
-    pub tx_bytes: f64,
-    pub tx_errors: f64,
-    pub tx_dropped: f64,
-    pub tx_retries: f64,
-    pub rx_multicast: f64,
-    pub rx_broadcast: f64,
-    pub tx_multicast: f64,
-    pub tx_broadcast: f64,
-    pub bytes: f64,
-    pub duration: f64,
+    pub site_id: Option<String>,
+    pub o: Option<String>,
+    pub oid: Option<String>,
+    pub sw: Option<String>,
+    pub time: Option<i64>,
+    pub datetime: Option<String>,
+    pub rx_packets: Option<f64>,
+    pub rx_bytes: Option<f64>,
+    pub rx_errors: Option<f64>,
+    pub rx_dropped: Option<f64>,
+    pub rx_crypts: Option<f64>,
+    pub rx_frags: Option<f64>,
+    pub tx_packets: Option<f64>,
+    pub tx_bytes: Option<f64>,
+    pub tx_errors: Option<f64>,
+    pub tx_dropped: Option<f64>,
+    pub tx_retries: Option<f64>,
+    pub rx_multicast: Option<f64>,
+    pub rx_broadcast: Option<f64>,
+    pub tx_multicast: Option<f64>,
+    pub tx_broadcast: Option<f64>,
+    pub bytes: Option<f64>,
+    pub duration: Option<f64>,
     #[serde(rename = "port_2-rx_packets")]
     pub port_2_rx_packets: Option<f64>,
     #[serde(rename = "port_2-rx_bytes")]
@@ -738,416 +738,416 @@ pub struct Sw {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Ap {
-    pub site_id: String,
-    pub o: String,
-    pub oid: String,
-    pub ap: String,
-    pub time: i64,
-    pub datetime: String,
+    pub site_id: Option<String>,
+    pub o: Option<String>,
+    pub oid: Option<String>,
+    pub ap: Option<String>,
+    pub time: Option<i64>,
+    pub datetime: Option<String>,
     #[serde(rename = "guest-wifi1-rx_packets")]
-    pub guest_wifi1_rx_packets: f64,
+    pub guest_wifi1_rx_packets: Option<f64>,
     #[serde(rename = "user-wifi1-rx_packets")]
-    pub user_wifi1_rx_packets: f64,
+    pub user_wifi1_rx_packets: Option<f64>,
     #[serde(rename = "user-rx_packets")]
-    pub user_rx_packets: f64,
+    pub user_rx_packets: Option<f64>,
     #[serde(rename = "guest-rx_packets")]
-    pub guest_rx_packets: f64,
+    pub guest_rx_packets: Option<f64>,
     #[serde(rename = "wifi0-rx_packets")]
-    pub wifi0_rx_packets: f64,
+    pub wifi0_rx_packets: Option<f64>,
     #[serde(rename = "wifi1-rx_packets")]
-    pub wifi1_rx_packets: f64,
-    pub rx_packets: f64,
+    pub wifi1_rx_packets: Option<f64>,
+    pub rx_packets: Option<f64>,
     #[serde(rename = "guest-wifi1-rx_bytes")]
-    pub guest_wifi1_rx_bytes: f64,
+    pub guest_wifi1_rx_bytes: Option<f64>,
     #[serde(rename = "user-wifi1-rx_bytes")]
-    pub user_wifi1_rx_bytes: f64,
+    pub user_wifi1_rx_bytes: Option<f64>,
     #[serde(rename = "user-rx_bytes")]
-    pub user_rx_bytes: f64,
+    pub user_rx_bytes: Option<f64>,
     #[serde(rename = "guest-rx_bytes")]
-    pub guest_rx_bytes: f64,
+    pub guest_rx_bytes: Option<f64>,
     #[serde(rename = "wifi0-rx_bytes")]
-    pub wifi0_rx_bytes: f64,
+    pub wifi0_rx_bytes: Option<f64>,
     #[serde(rename = "wifi1-rx_bytes")]
-    pub wifi1_rx_bytes: f64,
-    pub rx_bytes: f64,
+    pub wifi1_rx_bytes: Option<f64>,
+    pub rx_bytes: Option<f64>,
     #[serde(rename = "guest-wifi1-rx_errors")]
-    pub guest_wifi1_rx_errors: f64,
+    pub guest_wifi1_rx_errors: Option<f64>,
     #[serde(rename = "user-wifi1-rx_errors")]
-    pub user_wifi1_rx_errors: f64,
+    pub user_wifi1_rx_errors: Option<f64>,
     #[serde(rename = "user-rx_errors")]
-    pub user_rx_errors: f64,
+    pub user_rx_errors: Option<f64>,
     #[serde(rename = "guest-rx_errors")]
-    pub guest_rx_errors: f64,
+    pub guest_rx_errors: Option<f64>,
     #[serde(rename = "wifi0-rx_errors")]
-    pub wifi0_rx_errors: f64,
+    pub wifi0_rx_errors: Option<f64>,
     #[serde(rename = "wifi1-rx_errors")]
-    pub wifi1_rx_errors: f64,
-    pub rx_errors: f64,
+    pub wifi1_rx_errors: Option<f64>,
+    pub rx_errors: Option<f64>,
     #[serde(rename = "guest-wifi1-rx_dropped")]
-    pub guest_wifi1_rx_dropped: f64,
+    pub guest_wifi1_rx_dropped: Option<f64>,
     #[serde(rename = "user-wifi1-rx_dropped")]
-    pub user_wifi1_rx_dropped: f64,
+    pub user_wifi1_rx_dropped: Option<f64>,
     #[serde(rename = "user-rx_dropped")]
-    pub user_rx_dropped: f64,
+    pub user_rx_dropped: Option<f64>,
     #[serde(rename = "guest-rx_dropped")]
-    pub guest_rx_dropped: f64,
+    pub guest_rx_dropped: Option<f64>,
     #[serde(rename = "wifi0-rx_dropped")]
-    pub wifi0_rx_dropped: f64,
+    pub wifi0_rx_dropped: Option<f64>,
     #[serde(rename = "wifi1-rx_dropped")]
-    pub wifi1_rx_dropped: f64,
-    pub rx_dropped: f64,
+    pub wifi1_rx_dropped: Option<f64>,
+    pub rx_dropped: Option<f64>,
     #[serde(rename = "guest-wifi1-rx_crypts")]
-    pub guest_wifi1_rx_crypts: f64,
+    pub guest_wifi1_rx_crypts: Option<f64>,
     #[serde(rename = "user-wifi1-rx_crypts")]
-    pub user_wifi1_rx_crypts: f64,
+    pub user_wifi1_rx_crypts: Option<f64>,
     #[serde(rename = "user-rx_crypts")]
-    pub user_rx_crypts: f64,
+    pub user_rx_crypts: Option<f64>,
     #[serde(rename = "guest-rx_crypts")]
-    pub guest_rx_crypts: f64,
+    pub guest_rx_crypts: Option<f64>,
     #[serde(rename = "wifi0-rx_crypts")]
-    pub wifi0_rx_crypts: f64,
+    pub wifi0_rx_crypts: Option<f64>,
     #[serde(rename = "wifi1-rx_crypts")]
-    pub wifi1_rx_crypts: f64,
-    pub rx_crypts: f64,
+    pub wifi1_rx_crypts: Option<f64>,
+    pub rx_crypts: Option<f64>,
     #[serde(rename = "guest-wifi1-rx_frags")]
-    pub guest_wifi1_rx_frags: f64,
+    pub guest_wifi1_rx_frags: Option<f64>,
     #[serde(rename = "user-wifi1-rx_frags")]
-    pub user_wifi1_rx_frags: f64,
+    pub user_wifi1_rx_frags: Option<f64>,
     #[serde(rename = "user-rx_frags")]
-    pub user_rx_frags: f64,
+    pub user_rx_frags: Option<f64>,
     #[serde(rename = "guest-rx_frags")]
-    pub guest_rx_frags: f64,
+    pub guest_rx_frags: Option<f64>,
     #[serde(rename = "wifi0-rx_frags")]
-    pub wifi0_rx_frags: f64,
+    pub wifi0_rx_frags: Option<f64>,
     #[serde(rename = "wifi1-rx_frags")]
-    pub wifi1_rx_frags: f64,
-    pub rx_frags: f64,
+    pub wifi1_rx_frags: Option<f64>,
+    pub rx_frags: Option<f64>,
     #[serde(rename = "guest-wifi1-tx_packets")]
-    pub guest_wifi1_tx_packets: f64,
+    pub guest_wifi1_tx_packets: Option<f64>,
     #[serde(rename = "user-wifi1-tx_packets")]
-    pub user_wifi1_tx_packets: f64,
+    pub user_wifi1_tx_packets: Option<f64>,
     #[serde(rename = "user-tx_packets")]
-    pub user_tx_packets: f64,
+    pub user_tx_packets: Option<f64>,
     #[serde(rename = "guest-tx_packets")]
-    pub guest_tx_packets: f64,
+    pub guest_tx_packets: Option<f64>,
     #[serde(rename = "wifi0-tx_packets")]
-    pub wifi0_tx_packets: f64,
+    pub wifi0_tx_packets: Option<f64>,
     #[serde(rename = "wifi1-tx_packets")]
-    pub wifi1_tx_packets: f64,
-    pub tx_packets: f64,
+    pub wifi1_tx_packets: Option<f64>,
+    pub tx_packets: Option<f64>,
     #[serde(rename = "guest-wifi1-tx_bytes")]
-    pub guest_wifi1_tx_bytes: f64,
+    pub guest_wifi1_tx_bytes: Option<f64>,
     #[serde(rename = "user-wifi1-tx_bytes")]
-    pub user_wifi1_tx_bytes: f64,
+    pub user_wifi1_tx_bytes: Option<f64>,
     #[serde(rename = "user-tx_bytes")]
-    pub user_tx_bytes: f64,
+    pub user_tx_bytes: Option<f64>,
     #[serde(rename = "guest-tx_bytes")]
-    pub guest_tx_bytes: f64,
+    pub guest_tx_bytes: Option<f64>,
     #[serde(rename = "wifi0-tx_bytes")]
-    pub wifi0_tx_bytes: f64,
+    pub wifi0_tx_bytes: Option<f64>,
     #[serde(rename = "wifi1-tx_bytes")]
-    pub wifi1_tx_bytes: f64,
-    pub tx_bytes: f64,
+    pub wifi1_tx_bytes: Option<f64>,
+    pub tx_bytes: Option<f64>,
     #[serde(rename = "guest-wifi1-tx_errors")]
-    pub guest_wifi1_tx_errors: f64,
+    pub guest_wifi1_tx_errors: Option<f64>,
     #[serde(rename = "user-wifi1-tx_errors")]
-    pub user_wifi1_tx_errors: f64,
+    pub user_wifi1_tx_errors: Option<f64>,
     #[serde(rename = "user-tx_errors")]
-    pub user_tx_errors: f64,
+    pub user_tx_errors: Option<f64>,
     #[serde(rename = "guest-tx_errors")]
-    pub guest_tx_errors: f64,
+    pub guest_tx_errors: Option<f64>,
     #[serde(rename = "wifi0-tx_errors")]
-    pub wifi0_tx_errors: f64,
+    pub wifi0_tx_errors: Option<f64>,
     #[serde(rename = "wifi1-tx_errors")]
-    pub wifi1_tx_errors: f64,
-    pub tx_errors: f64,
+    pub wifi1_tx_errors: Option<f64>,
+    pub tx_errors: Option<f64>,
     #[serde(rename = "guest-wifi1-tx_dropped")]
-    pub guest_wifi1_tx_dropped: f64,
+    pub guest_wifi1_tx_dropped: Option<f64>,
     #[serde(rename = "user-wifi1-tx_dropped")]
-    pub user_wifi1_tx_dropped: f64,
+    pub user_wifi1_tx_dropped: Option<f64>,
     #[serde(rename = "user-tx_dropped")]
-    pub user_tx_dropped: f64,
+    pub user_tx_dropped: Option<f64>,
     #[serde(rename = "guest-tx_dropped")]
-    pub guest_tx_dropped: f64,
+    pub guest_tx_dropped: Option<f64>,
     #[serde(rename = "wifi0-tx_dropped")]
-    pub wifi0_tx_dropped: f64,
+    pub wifi0_tx_dropped: Option<f64>,
     #[serde(rename = "wifi1-tx_dropped")]
-    pub wifi1_tx_dropped: f64,
-    pub tx_dropped: f64,
+    pub wifi1_tx_dropped: Option<f64>,
+    pub tx_dropped: Option<f64>,
     #[serde(rename = "guest-wifi1-tx_retries")]
-    pub guest_wifi1_tx_retries: f64,
+    pub guest_wifi1_tx_retries: Option<f64>,
     #[serde(rename = "user-wifi1-tx_retries")]
-    pub user_wifi1_tx_retries: f64,
+    pub user_wifi1_tx_retries: Option<f64>,
     #[serde(rename = "user-tx_retries")]
-    pub user_tx_retries: f64,
+    pub user_tx_retries: Option<f64>,
     #[serde(rename = "guest-tx_retries")]
-    pub guest_tx_retries: f64,
+    pub guest_tx_retries: Option<f64>,
     #[serde(rename = "wifi0-tx_retries")]
-    pub wifi0_tx_retries: f64,
+    pub wifi0_tx_retries: Option<f64>,
     #[serde(rename = "wifi1-tx_retries")]
-    pub wifi1_tx_retries: f64,
-    pub tx_retries: f64,
+    pub wifi1_tx_retries: Option<f64>,
+    pub tx_retries: Option<f64>,
     #[serde(rename = "guest-wifi1-mac_filter_rejections")]
-    pub guest_wifi1_mac_filter_rejections: f64,
+    pub guest_wifi1_mac_filter_rejections: Option<f64>,
     #[serde(rename = "user-wifi1-mac_filter_rejections")]
-    pub user_wifi1_mac_filter_rejections: f64,
+    pub user_wifi1_mac_filter_rejections: Option<f64>,
     #[serde(rename = "user-mac_filter_rejections")]
-    pub user_mac_filter_rejections: f64,
+    pub user_mac_filter_rejections: Option<f64>,
     #[serde(rename = "guest-mac_filter_rejections")]
-    pub guest_mac_filter_rejections: f64,
+    pub guest_mac_filter_rejections: Option<f64>,
     #[serde(rename = "wifi0-mac_filter_rejections")]
-    pub wifi0_mac_filter_rejections: f64,
+    pub wifi0_mac_filter_rejections: Option<f64>,
     #[serde(rename = "wifi1-mac_filter_rejections")]
-    pub wifi1_mac_filter_rejections: f64,
-    pub mac_filter_rejections: f64,
+    pub wifi1_mac_filter_rejections: Option<f64>,
+    pub mac_filter_rejections: Option<f64>,
     #[serde(rename = "guest-wifi1-wifi_tx_attempts")]
-    pub guest_wifi1_wifi_tx_attempts: f64,
+    pub guest_wifi1_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "user-wifi1-wifi_tx_attempts")]
-    pub user_wifi1_wifi_tx_attempts: f64,
+    pub user_wifi1_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "user-wifi_tx_attempts")]
-    pub user_wifi_tx_attempts: f64,
+    pub user_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "guest-wifi_tx_attempts")]
-    pub guest_wifi_tx_attempts: f64,
+    pub guest_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "wifi0-wifi_tx_attempts")]
-    pub wifi0_wifi_tx_attempts: f64,
+    pub wifi0_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "wifi1-wifi_tx_attempts")]
-    pub wifi1_wifi_tx_attempts: f64,
-    pub wifi_tx_attempts: f64,
+    pub wifi1_wifi_tx_attempts: Option<f64>,
+    pub wifi_tx_attempts: Option<f64>,
     #[serde(rename = "guest-wifi1-wifi_tx_dropped")]
-    pub guest_wifi1_wifi_tx_dropped: f64,
+    pub guest_wifi1_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "user-wifi1-wifi_tx_dropped")]
-    pub user_wifi1_wifi_tx_dropped: f64,
+    pub user_wifi1_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "user-wifi_tx_dropped")]
-    pub user_wifi_tx_dropped: f64,
+    pub user_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "guest-wifi_tx_dropped")]
-    pub guest_wifi_tx_dropped: f64,
+    pub guest_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "wifi0-wifi_tx_dropped")]
-    pub wifi0_wifi_tx_dropped: f64,
+    pub wifi0_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "wifi1-wifi_tx_dropped")]
-    pub wifi1_wifi_tx_dropped: f64,
-    pub wifi_tx_dropped: f64,
+    pub wifi1_wifi_tx_dropped: Option<f64>,
+    pub wifi_tx_dropped: Option<f64>,
     #[serde(rename = "guest-wifi1-duration")]
-    pub guest_wifi1_duration: f64,
+    pub guest_wifi1_duration: Option<f64>,
     #[serde(rename = "user-wifi1-duration")]
-    pub user_wifi1_duration: f64,
+    pub user_wifi1_duration: Option<f64>,
     #[serde(rename = "user-duration")]
-    pub user_duration: f64,
+    pub user_duration: Option<f64>,
     #[serde(rename = "guest-duration")]
-    pub guest_duration: f64,
+    pub guest_duration: Option<f64>,
     #[serde(rename = "wifi0-duration")]
-    pub wifi0_duration: f64,
+    pub wifi0_duration: Option<f64>,
     #[serde(rename = "wifi1-duration")]
-    pub wifi1_duration: f64,
-    pub duration: f64,
+    pub wifi1_duration: Option<f64>,
+    pub duration: Option<f64>,
     #[serde(rename = "na-wifi_tx_attempts")]
-    pub na_wifi_tx_attempts: f64,
+    pub na_wifi_tx_attempts: Option<f64>,
     #[serde(rename = "na-wifi_tx_dropped")]
-    pub na_wifi_tx_dropped: f64,
+    pub na_wifi_tx_dropped: Option<f64>,
     #[serde(rename = "na-tx_retries")]
-    pub na_tx_retries: f64,
+    pub na_tx_retries: Option<f64>,
     #[serde(rename = "na-tx_packets")]
-    pub na_tx_packets: f64,
+    pub na_tx_packets: Option<f64>,
     #[serde(rename = "na-tx_bytes")]
-    pub na_tx_bytes: f64,
+    pub na_tx_bytes: Option<f64>,
     #[serde(rename = "na-rx_packets")]
-    pub na_rx_packets: f64,
+    pub na_rx_packets: Option<f64>,
     #[serde(rename = "na-rx_bytes")]
-    pub na_rx_bytes: f64,
+    pub na_rx_bytes: Option<f64>,
     #[serde(rename = "na-bytes")]
-    pub na_bytes: f64,
+    pub na_bytes: Option<f64>,
     #[serde(rename = "na-total_mcast_bcast")]
-    pub na_total_mcast_bcast: f64,
-    pub bytes: f64,
+    pub na_total_mcast_bcast: Option<f64>,
+    pub bytes: Option<f64>,
     #[serde(rename = "port_1-rx_packets")]
-    pub port_1_rx_packets: f64,
+    pub port_1_rx_packets: Option<f64>,
     #[serde(rename = "port_1-rx_bytes")]
-    pub port_1_rx_bytes: f64,
+    pub port_1_rx_bytes: Option<f64>,
     #[serde(rename = "port_1-tx_packets")]
-    pub port_1_tx_packets: f64,
+    pub port_1_tx_packets: Option<f64>,
     #[serde(rename = "port_1-tx_bytes")]
-    pub port_1_tx_bytes: f64,
+    pub port_1_tx_bytes: Option<f64>,
     #[serde(rename = "port_1-rx_multicast")]
-    pub port_1_rx_multicast: f64,
+    pub port_1_rx_multicast: Option<f64>,
     #[serde(rename = "port_1-rx_broadcast")]
-    pub port_1_rx_broadcast: f64,
+    pub port_1_rx_broadcast: Option<f64>,
     #[serde(rename = "port_1-tx_multicast")]
-    pub port_1_tx_multicast: f64,
+    pub port_1_tx_multicast: Option<f64>,
     #[serde(rename = "port_1-tx_broadcast")]
     pub port_1_tx_broadcast: Option<f64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Rps {
-    pub power_management_mode: String,
+    pub power_management_mode: Option<String>,
     pub rps_port_table: Vec<RpsPortTable>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RpsPortTable {
-    pub port_idx: i64,
-    pub name: String,
-    pub port_mode: String,
+    pub port_idx: Option<i64>,
+    pub name: Option<String>,
+    pub port_mode: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct VapTable {
-    pub anomalies_bar_chart: AnomaliesBarChart,
-    pub anomalies_bar_chart_now: AnomaliesBarChartNow,
-    pub avg_client_signal: i64,
-    pub bssid: String,
-    pub bw: i64,
-    pub ccq: i64,
-    pub channel: i64,
-    pub dns_avg_latency: i64,
-    pub essid: String,
-    pub icmp_avg_rtt: i64,
-    pub id: String,
-    pub mac_filter_rejections: i64,
-    pub name: String,
-    pub num_satisfaction_sta: i64,
+    pub anomalies_bar_chart: Option<AnomaliesBarChart>,
+    pub anomalies_bar_chart_now: Option<AnomaliesBarChartNow>,
+    pub avg_client_signal: Option<i64>,
+    pub bssid: Option<String>,
+    pub bw: Option<i64>,
+    pub ccq: Option<i64>,
+    pub channel: Option<i64>,
+    pub dns_avg_latency: Option<i64>,
+    pub essid: Option<String>,
+    pub icmp_avg_rtt: Option<i64>,
+    pub id: Option<String>,
+    pub mac_filter_rejections: Option<i64>,
+    pub name: Option<String>,
+    pub num_satisfaction_sta: Option<i64>,
     pub num_sta: i64,
-    pub radio: String,
-    pub radio_name: String,
-    pub reasons_bar_chart: ReasonsBarChart,
-    pub reasons_bar_chart_now: ReasonsBarChartNow,
-    pub rx_bcast: i64,
-    pub rx_bytes: i64,
-    pub rx_crypts: i64,
-    pub rx_dropped: i64,
-    pub rx_errors: i64,
-    pub rx_frags: i64,
-    pub rx_mcast: i64,
-    pub rx_nwids: i64,
-    pub rx_packets: i64,
+    pub radio: Option<String>,
+    pub radio_name: Option<String>,
+    pub reasons_bar_chart: Option<ReasonsBarChart>,
+    pub reasons_bar_chart_now: Option<ReasonsBarChartNow>,
+    pub rx_bcast: Option<i64>,
+    pub rx_bytes: Option<i64>,
+    pub rx_crypts: Option<i64>,
+    pub rx_dropped: Option<i64>,
+    pub rx_errors: Option<i64>,
+    pub rx_frags: Option<i64>,
+    pub rx_mcast: Option<i64>,
+    pub rx_nwids: Option<i64>,
+    pub rx_packets: Option<i64>,
     pub rx_tcp_stats: RxTcpStats,
-    pub satisfaction: i64,
-    pub state: String,
-    pub tx_bcast: i64,
-    pub tx_bytes: i64,
-    pub tx_combined_retries: i64,
-    pub tx_data_mpdu_bytes: i64,
-    pub tx_dropped: i64,
-    pub tx_errors: i64,
-    pub tx_mcast: i64,
-    pub tx_packets: i64,
-    pub tx_power: i64,
-    pub tx_retries: i64,
-    pub tx_rts_retries: i64,
-    pub tx_success: i64,
-    pub tx_tcp_stats: TxTcpStats,
-    pub tx_total: i64,
-    pub up: bool,
-    pub usage: String,
-    pub wifi_tx_attempts: i64,
-    pub wifi_tx_dropped: i64,
-    pub t: String,
-    pub wlanconf_id: String,
-    pub is_guest: bool,
-    pub is_wep: bool,
-    pub ap_mac: String,
-    pub site_id: String,
+    pub satisfaction: Option<i64>,
+    pub state: Option<String>,
+    pub tx_bcast: Option<i64>,
+    pub tx_bytes: Option<i64>,
+    pub tx_combined_retries: Option<i64>,
+    pub tx_data_mpdu_bytes: Option<i64>,
+    pub tx_dropped: Option<i64>,
+    pub tx_errors: Option<i64>,
+    pub tx_mcast: Option<i64>,
+    pub tx_packets: Option<i64>,
+    pub tx_power: Option<i64>,
+    pub tx_retries: Option<i64>,
+    pub tx_rts_retries: Option<i64>,
+    pub tx_success: Option<i64>,
+    pub tx_tcp_stats: Option<TxTcpStats>,
+    pub tx_total: Option<i64>,
+    pub up: Option<bool>,
+    pub usage: Option<String>,
+    pub wifi_tx_attempts: Option<i64>,
+    pub wifi_tx_dropped: Option<i64>,
+    pub t: Option<String>,
+    pub wlanconf_id: Option<String>,
+    pub is_guest: Option<bool>,
+    pub is_wep: Option<bool>,
+    pub ap_mac: Option<String>,
+    pub site_id: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AnomaliesBarChart {
-    pub high_disconnect_count: i64,
-    pub high_dns_latency: i64,
-    pub high_icmp_rtt: i64,
-    pub high_tcp_latency: i64,
-    pub high_tcp_packet_loss: i64,
-    pub high_wifi_drops: i64,
-    pub high_wifi_latency: i64,
-    pub high_wifi_retries: i64,
-    pub low_phy_rate: i64,
-    pub no_dhcp_response: i64,
-    pub poor_stream_eff: i64,
-    pub sleepy_client: i64,
-    pub sta_arp_timeout: i64,
-    pub sta_dns_timeout: i64,
-    pub sta_ip_timeout: i64,
-    pub weak_signal: i64,
+    pub high_disconnect_count: Option<i64>,
+    pub high_dns_latency: Option<i64>,
+    pub high_icmp_rtt: Option<i64>,
+    pub high_tcp_latency: Option<i64>,
+    pub high_tcp_packet_loss: Option<i64>,
+    pub high_wifi_drops: Option<i64>,
+    pub high_wifi_latency: Option<i64>,
+    pub high_wifi_retries: Option<i64>,
+    pub low_phy_rate: Option<i64>,
+    pub no_dhcp_response: Option<i64>,
+    pub poor_stream_eff: Option<i64>,
+    pub sleepy_client: Option<i64>,
+    pub sta_arp_timeout: Option<i64>,
+    pub sta_dns_timeout: Option<i64>,
+    pub sta_ip_timeout: Option<i64>,
+    pub weak_signal: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AnomaliesBarChartNow {
-    pub high_disconnect_count: i64,
-    pub high_dns_latency: i64,
-    pub high_icmp_rtt: i64,
-    pub high_tcp_latency: i64,
-    pub high_tcp_packet_loss: i64,
-    pub high_wifi_drops: i64,
-    pub high_wifi_latency: i64,
-    pub high_wifi_retries: i64,
-    pub low_phy_rate: i64,
-    pub no_dhcp_response: i64,
-    pub poor_stream_eff: i64,
-    pub sleepy_client: i64,
-    pub sta_arp_timeout: i64,
-    pub sta_dns_timeout: i64,
-    pub sta_ip_timeout: i64,
-    pub weak_signal: i64,
+    pub high_disconnect_count: Option<i64>,
+    pub high_dns_latency: Option<i64>,
+    pub high_icmp_rtt: Option<i64>,
+    pub high_tcp_latency: Option<i64>,
+    pub high_tcp_packet_loss: Option<i64>,
+    pub high_wifi_drops: Option<i64>,
+    pub high_wifi_latency: Option<i64>,
+    pub high_wifi_retries: Option<i64>,
+    pub low_phy_rate: Option<i64>,
+    pub no_dhcp_response: Option<i64>,
+    pub poor_stream_eff: Option<i64>,
+    pub sleepy_client: Option<i64>,
+    pub sta_arp_timeout: Option<i64>,
+    pub sta_dns_timeout: Option<i64>,
+    pub sta_ip_timeout: Option<i64>,
+    pub weak_signal: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReasonsBarChart {
-    pub no_dhcp_response: i64,
-    pub phy_rate: i64,
-    pub signal: i64,
-    pub sleepy_client: i64,
-    pub sta_arp_timeout: i64,
-    pub sta_disconnects: i64,
-    pub sta_dns_latency: i64,
-    pub sta_dns_timeout: i64,
-    pub sta_icmp_rtt: i64,
-    pub sta_ip_timeout: i64,
-    pub stream_eff: i64,
-    pub tcp_latency: i64,
-    pub tcp_packet_loss: i64,
-    pub wifi_drops: i64,
-    pub wifi_latency: i64,
-    pub wifi_retries: i64,
+    pub no_dhcp_response: Option<i64>,
+    pub phy_rate: Option<i64>,
+    pub signal: Option<i64>,
+    pub sleepy_client: Option<i64>,
+    pub sta_arp_timeout: Option<i64>,
+    pub sta_disconnects: Option<i64>,
+    pub sta_dns_latency: Option<i64>,
+    pub sta_dns_timeout: Option<i64>,
+    pub sta_icmp_rtt: Option<i64>,
+    pub sta_ip_timeout: Option<i64>,
+    pub stream_eff: Option<i64>,
+    pub tcp_latency: Option<i64>,
+    pub tcp_packet_loss: Option<i64>,
+    pub wifi_drops: Option<i64>,
+    pub wifi_latency: Option<i64>,
+    pub wifi_retries: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReasonsBarChartNow {
-    pub no_dhcp_response: i64,
-    pub phy_rate: i64,
-    pub signal: i64,
-    pub sleepy_client: i64,
-    pub sta_arp_timeout: i64,
-    pub sta_disconnects: i64,
-    pub sta_dns_latency: i64,
-    pub sta_dns_timeout: i64,
-    pub sta_icmp_rtt: i64,
-    pub sta_ip_timeout: i64,
-    pub stream_eff: i64,
-    pub tcp_latency: i64,
-    pub tcp_packet_loss: i64,
-    pub wifi_drops: i64,
-    pub wifi_latency: i64,
-    pub wifi_retries: i64,
+    pub no_dhcp_response: Option<i64>,
+    pub phy_rate: Option<i64>,
+    pub signal: Option<i64>,
+    pub sleepy_client: Option<i64>,
+    pub sta_arp_timeout: Option<i64>,
+    pub sta_disconnects: Option<i64>,
+    pub sta_dns_latency: Option<i64>,
+    pub sta_dns_timeout: Option<i64>,
+    pub sta_icmp_rtt: Option<i64>,
+    pub sta_ip_timeout: Option<i64>,
+    pub stream_eff: Option<i64>,
+    pub tcp_latency: Option<i64>,
+    pub tcp_packet_loss: Option<i64>,
+    pub wifi_drops: Option<i64>,
+    pub wifi_latency: Option<i64>,
+    pub wifi_retries: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RxTcpStats {
-    pub goodbytes: i64,
-    pub lat_avg: i64,
-    pub lat_max: i64,
-    pub lat_min: i64,
-    pub lat_samples: i64,
-    pub lat_sum: i64,
-    pub retries: i64,
-    pub stalls: i64,
+    pub goodbytes: Option<i64>,
+    pub lat_avg: Option<i64>,
+    pub lat_max: Option<i64>,
+    pub lat_min: Option<i64>,
+    pub lat_samples: Option<i64>,
+    pub lat_sum: Option<i64>,
+    pub retries: Option<i64>,
+    pub stalls: Option<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TxTcpStats {
-    pub goodbytes: i64,
-    pub lat_avg: i64,
-    pub lat_max: i64,
-    pub lat_min: i64,
-    pub lat_samples: i64,
-    pub lat_sum: i64,
-    pub retries: i64,
-    pub stalls: i64,
+    pub goodbytes: Option<i64>,
+    pub lat_avg: Option<i64>,
+    pub lat_max: Option<i64>,
+    pub lat_min: Option<i64>,
+    pub lat_samples: Option<i64>,
+    pub lat_sum: Option<i64>,
+    pub retries: Option<i64>,
+    pub stalls: Option<i64>,
 }
