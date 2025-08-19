@@ -2,7 +2,7 @@ mod models;
 
 use crate::responses::stat::devices::RawDevice;
 use crate::types::{
-    ConfigNet, InterfaceUserStats, SystemStats, Temperature, Uplink, UserStats, Version, IP,
+    ConfigNet, IP, InterfaceUserStats, SystemStats, Temperature, Uplink, UserStats, Version,
 };
 use chrono::prelude::*;
 use models::DeviceType;
@@ -75,21 +75,28 @@ impl From<RawDevice> for Device {
             name: raw.name,
             config_network: ConfigNet::from(raw.config_network),
             ip: IP::from(raw.ip),
-            connected_at: DateTime::from_timestamp(raw.connected_at, 0).expect("Invalid timestamp"),
+            connected_at: DateTime::from_timestamp(
+                match raw.connected_at {
+                    Some(ts) => ts,
+                    None => 0,
+                },
+                0,
+            )
+            .expect("Invalid timestamp"),
             provisioned_at: DateTime::from_timestamp(raw.provisioned_at, 0)
                 .expect("Invalid timestamp"),
-            disconnected_at: DateTime::from_timestamp(raw.disconnected_at, 0)
+            disconnected_at: DateTime::from_timestamp(
+                match raw.disconnected_at {
+                    Some(ts) => ts,
+                    None => 0,
+                },
+                0,
+            )
+            .expect("Invalid timestamp"),
+            startup_time: DateTime::from_timestamp(raw.startup_timestamp.unwrap_or_default(), 0)
                 .expect("Invalid timestamp"),
-            startup_time: DateTime::from_timestamp(
-                raw.startup_timestamp.unwrap_or_default(),
-                0,
-            )
-            .expect("Invalid timestamp"),
-            last_seen: DateTime::from_timestamp(
-                raw.last_seen.unwrap_or_default(),
-                0,
-            )
-            .expect("Invalid timestamp"),
+            last_seen: DateTime::from_timestamp(raw.last_seen.unwrap_or_default(), 0)
+                .expect("Invalid timestamp"),
             serial: match raw.serial {
                 Some(s) => s,
                 None => "".to_string(),

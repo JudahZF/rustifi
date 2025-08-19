@@ -41,9 +41,13 @@ impl Site {
             Ok(response) => {
                 let mut aps: Vec<AccessPoint> = Vec::new();
                 let mut switches: Vec<Device> = Vec::new();
-                let response = match response.json::<DeviceListResponse>().await {
+                let resp_text = response.text().await.unwrap();
+                let response = match serde_json::from_str::<DeviceListResponse>(&resp_text) {
                     Ok(response) => response,
-                    Err(e) => return Err(Box::new(e)),
+                    Err(e) => {
+                        println!("Error parsing JSON: {}", e);
+                        return Err(Box::new(e));
+                    }
                 };
                 for device in response.data {
                     if device.adopted {
