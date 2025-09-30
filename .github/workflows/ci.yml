@@ -1,50 +1,54 @@
 name: Cargo Build & Test
 
 on:
-    push:
-        paths:
-            - src/**
-            - Cargo.toml
-            - tests/**
-            - .github/workflows/ci.yml
-        branches:
-            - main
-    pull_request:
-        paths:
-            - src/**
-            - Cargo.toml
-            - tests/**
-            - .github/workflows/ci.yml
-        branches:
-            - main
+  push:
+    paths:
+      - src/**
+      - Cargo.toml
+      - tests/**
+      - .github/workflows/ci.yml
+    branches:
+      - main
+  pull_request:
+    paths:
+      - src/**
+      - Cargo.toml
+      - tests/**
+      - .github/workflows/ci.yml
+    branches:
+      - main
 permissions:
-   contents: read
+  contents: read
+  actions: read
 
 concurrency:
-   group: ${{ github.workflow }}-${{ github.ref }}
-   cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 env:
-    CARGO_TERM_COLOR: always
+  CARGO_TERM_COLOR: always
 
 jobs:
-    build_and_test:
-        name: Rust project - latest
-        runs-on: blacksmith-8vcpu-ubuntu-2204
-        strategy:
-            fail-fast: false
-            matrix:
-                toolchain:
-                    - stable
-                    - beta
-                    - nightly
-                include:
-                    - toolchain: nightly
-                      experimental: true
-        continue-on-error: ${{ matrix.experimental || false }}
-        steps:
-            - uses: actions/checkout@v4
-            - uses: Swatinem/rust-cache@v2
-            - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-            - run: cargo build --locked --verbose
-            - run: cargo test --locked --verbose
+  build_and_test:
+    name: Rust project - latest
+    runs-on: blacksmith-8vcpu-ubuntu-2204
+    permissions:
+      contents: read
+      actions: write
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain:
+          - stable
+          - beta
+          - nightly
+        include:
+          - toolchain: nightly
+            experimental: true
+    continue-on-error: ${{ matrix.experimental || false }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      - run: cargo build --locked --verbose --all-targets
+      - run: cargo test --locked --verbose
