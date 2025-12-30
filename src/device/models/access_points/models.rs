@@ -2,17 +2,18 @@ use std::fmt::Display;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
 pub enum APModel {
-    BasestationXG,
-    U6Mesh,
     ACMesh,
     ACMeshPro,
     ACPro,
+    BasestationXG,
+    E7Campus,
+    NanoHD,
+    U6Mesh,
+    U7ProXGS,
+    U7ProOutdoor,
     #[default]
     Unknown,
     XG,
-    U7ProXGS,
-    U7ProOutdoor,
-    E7Campus,
 }
 
 impl From<String> for APModel {
@@ -27,6 +28,7 @@ impl From<String> for APModel {
             "UAPA6A4" => APModel::U7ProXGS,
             "UAPA6B0" => APModel::U7ProOutdoor,
             "UAPA6B1" => APModel::E7Campus,
+            "U7NHD" => APModel::NanoHD,
             _ => {
                 println!("Unknown model: {}", s);
                 APModel::Unknown
@@ -47,6 +49,7 @@ impl Display for APModel {
             APModel::E7Campus => write!(f, "E7 Campus"),
             APModel::U7ProXGS => write!(f, "U7 Pro XGS"),
             APModel::U7ProOutdoor => write!(f, "U7 Pro Outdoor"),
+            APModel::NanoHD => write!(f, "Nano HD"),
             APModel::Unknown => write!(f, "Unknown"),
         }
     }
