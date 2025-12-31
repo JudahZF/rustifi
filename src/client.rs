@@ -69,7 +69,20 @@ impl UnifiClient {
         E::Response: for<'a> serde::Deserialize<'a>,
     {
         let path = endpoint.build_path();
-        let url = format!("{}/{}/{}", self.base_url, self.base_path, path);
+        let mut url = format!("{}/{}/{}", self.base_url, self.base_path, path);
+
+        // Append query parameters if present
+        let params = endpoint.query_params();
+        if !params.is_empty() {
+            let query_string = params
+                .iter()
+                .map(|(k, v)| format!("{}={}", k, v))
+                .collect::<Vec<_>>()
+                .join("&");
+            url.push('?');
+            url.push_str(&query_string);
+        }
+
         let mut headers = reqwest::header::HeaderMap::new();
 
         if let Some(api_key) = &self.api_key {

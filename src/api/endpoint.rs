@@ -19,6 +19,12 @@ pub trait Endpoint {
     fn build_path(&self) -> String {
         Self::PATH.to_string()
     }
+
+    /// Return query parameters for this endpoint.
+    /// Override this method to add query parameters like pagination.
+    fn query_params(&self) -> Vec<(&'static str, String)> {
+        vec![]
+    }
 }
 
 pub struct EndpointBuilder {
