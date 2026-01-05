@@ -48,6 +48,18 @@ pub struct PoE {
     pub state: Option<String>,
 }
 
+impl PoE {
+    /// Check if PoE is enabled on this port.
+    pub fn is_enabled(&self) -> bool {
+        self.enabled.unwrap_or(false)
+    }
+
+    /// Check if PoE is actively delivering power (enabled and state is UP).
+    pub fn is_active(&self) -> bool {
+        self.is_enabled() && self.state.as_deref() == Some("UP")
+    }
+}
+
 /// Port information for physical interfaces.
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -71,6 +83,38 @@ pub struct Port {
     /// Power over Ethernet configuration
     #[serde(default)]
     pub poe: Option<PoE>,
+}
+
+impl Port {
+    /// Check if this port has PoE capability.
+    pub fn has_poe(&self) -> bool {
+        self.poe.is_some()
+    }
+
+    /// Check if this port is actively delivering PoE power.
+    pub fn is_poe_active(&self) -> bool {
+        self.poe.as_ref().map(|p| p.is_active()).unwrap_or(false)
+    }
+
+    /// Check if PoE is enabled on this port.
+    pub fn is_poe_enabled(&self) -> bool {
+        self.poe.as_ref().map(|p| p.is_enabled()).unwrap_or(false)
+    }
+
+    /// Check if the port link is up.
+    pub fn is_up(&self) -> bool {
+        self.state == InterfaceState::Up
+    }
+
+    /// Check if the port link is down.
+    pub fn is_down(&self) -> bool {
+        self.state == InterfaceState::Down
+    }
+
+    /// Get the current speed in Gbps, if available.
+    pub fn speed_gbps(&self) -> Option<f64> {
+        self.speed_mbps.map(|s| s as f64 / 1000.0)
+    }
 }
 
 /// Wireless radio standard.
@@ -264,6 +308,43 @@ impl DeviceDetails {
             .iter()
             .filter(|p| p.state == InterfaceState::Down)
             .collect()
+    }
+
+    /// Check if this device is a switch (has switching capability).
+    pub fn is_switch(&self) -> bool {
+        self.has_switching()
+    }
+
+    /// Get all ports with PoE capability.
+    pub fn poe_ports(&self) -> Vec<&Port> {
+        self.interfaces
+            .ports
+            .iter()
+            .filter(|p| p.has_poe())
+            .collect()
+    }
+
+    /// Get all ports with PoE enabled.
+    pub fn poe_enabled_ports(&self) -> Vec<&Port> {
+        self.interfaces
+            .ports
+            .iter()
+            .filter(|p| p.is_poe_enabled())
+            .collect()
+    }
+
+    /// Get all ports actively delivering PoE power.
+    pub fn poe_active_ports(&self) -> Vec<&Port> {
+        self.interfaces
+            .ports
+            .iter()
+            .filter(|p| p.is_poe_active())
+            .collect()
+    }
+
+    /// Get the count of PoE-capable ports.
+    pub fn poe_port_count(&self) -> usize {
+        self.poe_ports().len()
     }
 }
 
@@ -706,5 +787,276 @@ mod tests {
         assert_eq!(radio.frequency_ghz, 2.4);
         assert_eq!(radio.channel_width_mhz, 40);
         assert_eq!(radio.channel, Some(36));
+    }
+
+    #[test]
+    fn test_poe_methods() {
+        // Test PoE with enabled and UP state
+        let poe_active = PoE {
+            standard: Some("802.3bt".to_string()),
+            r#type: Some(3),
+            enabled: Some(true),
+            state: Some("UP".to_string()),
+        };
+        assert!(poe_active.is_enabled());
+        assert!(poe_active.is_active());
+
+        // Test PoE with enabled but DOWN state
+        let poe_enabled_down = PoE {
+            standard: Some("802.3at".to_string()),
+            r#type: Some(2),
+            enabled: Some(true),
+            state: Some("DOWN".to_string()),
+        };
+        assert!(poe_enabled_down.is_enabled());
+        assert!(!poe_enabled_down.is_active());
+
+        // Test PoE disabled
+        let poe_disabled = PoE {
+            standard: Some("802.3af".to_string()),
+            r#type: Some(1),
+            enabled: Some(false),
+            state: None,
+        };
+        assert!(!poe_disabled.is_enabled());
+        assert!(!poe_disabled.is_active());
+
+        // Test PoE with None values
+        let poe_none = PoE {
+            standard: None,
+            r#type: None,
+            enabled: None,
+            state: None,
+        };
+        assert!(!poe_none.is_enabled());
+        assert!(!poe_none.is_active());
+    }
+
+    #[test]
+    fn test_port_poe_methods() {
+        // Port with active PoE
+        let port_with_poe = Port {
+            idx: 1,
+            state: InterfaceState::Up,
+            connector: PortConnector::Rj45,
+            max_speed_mbps: 1000,
+            speed_mbps: Some(1000),
+            poe: Some(PoE {
+                standard: Some("802.3bt".to_string()),
+                r#type: Some(3),
+                enabled: Some(true),
+                state: Some("UP".to_string()),
+            }),
+        };
+        assert!(port_with_poe.has_poe());
+        assert!(port_with_poe.is_poe_enabled());
+        assert!(port_with_poe.is_poe_active());
+
+        // Port with disabled PoE
+        let port_poe_disabled = Port {
+            idx: 2,
+            state: InterfaceState::Up,
+            connector: PortConnector::Rj45,
+            max_speed_mbps: 1000,
+            speed_mbps: Some(1000),
+            poe: Some(PoE {
+                standard: Some("802.3at".to_string()),
+                r#type: Some(2),
+                enabled: Some(false),
+                state: None,
+            }),
+        };
+        assert!(port_poe_disabled.has_poe());
+        assert!(!port_poe_disabled.is_poe_enabled());
+        assert!(!port_poe_disabled.is_poe_active());
+
+        // Port without PoE
+        let port_no_poe = Port {
+            idx: 3,
+            state: InterfaceState::Up,
+            connector: PortConnector::Sfp,
+            max_speed_mbps: 10000,
+            speed_mbps: Some(10000),
+            poe: None,
+        };
+        assert!(!port_no_poe.has_poe());
+        assert!(!port_no_poe.is_poe_enabled());
+        assert!(!port_no_poe.is_poe_active());
+    }
+
+    #[test]
+    fn test_port_state_methods() {
+        let port_up = Port {
+            idx: 1,
+            state: InterfaceState::Up,
+            connector: PortConnector::Rj45,
+            max_speed_mbps: 1000,
+            speed_mbps: Some(1000),
+            poe: None,
+        };
+        assert!(port_up.is_up());
+        assert!(!port_up.is_down());
+        assert_eq!(port_up.speed_gbps(), Some(1.0));
+
+        let port_down = Port {
+            idx: 2,
+            state: InterfaceState::Down,
+            connector: PortConnector::Rj45,
+            max_speed_mbps: 1000,
+            speed_mbps: None,
+            poe: None,
+        };
+        assert!(!port_down.is_up());
+        assert!(port_down.is_down());
+        assert_eq!(port_down.speed_gbps(), None);
+
+        // Test 10G port speed
+        let port_10g = Port {
+            idx: 3,
+            state: InterfaceState::Up,
+            connector: PortConnector::SfpPlus,
+            max_speed_mbps: 10000,
+            speed_mbps: Some(10000),
+            poe: None,
+        };
+        assert_eq!(port_10g.speed_gbps(), Some(10.0));
+    }
+
+    #[test]
+    fn test_device_details_switch_methods() {
+        // Create a switch device with multiple ports
+        let json_data = json!({
+            "id": "switch-device-id",
+            "macAddress": "aa:bb:cc:dd:ee:ff",
+            "ipAddress": "192.168.1.100",
+            "name": "USW-24-PoE",
+            "model": "USW-24-PoE",
+            "supported": true,
+            "state": "ONLINE",
+            "firmwareUpdatable": false,
+            "configurationId": "config123",
+            "features": {
+                "switching": {},
+                "accessPoint": null
+            },
+            "interfaces": {
+                "ports": [
+                    {
+                        "idx": 1,
+                        "state": "UP",
+                        "connector": "RJ45",
+                        "maxSpeedMbps": 1000,
+                        "speedMbps": 1000,
+                        "poe": {
+                            "standard": "802.3at",
+                            "type": 2,
+                            "enabled": true,
+                            "state": "UP"
+                        }
+                    },
+                    {
+                        "idx": 2,
+                        "state": "UP",
+                        "connector": "RJ45",
+                        "maxSpeedMbps": 1000,
+                        "speedMbps": 1000,
+                        "poe": {
+                            "standard": "802.3at",
+                            "type": 2,
+                            "enabled": true,
+                            "state": "DOWN"
+                        }
+                    },
+                    {
+                        "idx": 3,
+                        "state": "DOWN",
+                        "connector": "RJ45",
+                        "maxSpeedMbps": 1000,
+                        "poe": {
+                            "standard": "802.3at",
+                            "type": 2,
+                            "enabled": false,
+                            "state": null
+                        }
+                    },
+                    {
+                        "idx": 25,
+                        "state": "UP",
+                        "connector": "SFP",
+                        "maxSpeedMbps": 1000,
+                        "speedMbps": 1000
+                    }
+                ],
+                "radios": []
+            }
+        });
+
+        let device: DeviceDetails = serde_json::from_value(json_data).unwrap();
+
+        // Test is_switch
+        assert!(device.is_switch());
+        assert!(device.has_switching());
+        assert!(!device.has_access_point());
+
+        // Test port counts
+        assert_eq!(device.port_count(), 4);
+        assert_eq!(device.active_ports().len(), 3);
+        assert_eq!(device.inactive_ports().len(), 1);
+
+        // Test PoE port methods
+        assert_eq!(device.poe_port_count(), 3); // 3 ports have PoE capability
+        assert_eq!(device.poe_ports().len(), 3);
+        assert_eq!(device.poe_enabled_ports().len(), 2); // 2 ports have PoE enabled
+        assert_eq!(device.poe_active_ports().len(), 1); // Only 1 port is actively delivering power
+
+        // Verify the active PoE port is port 1
+        let active_poe = device.poe_active_ports();
+        assert_eq!(active_poe[0].idx, 1);
+    }
+
+    #[test]
+    fn test_device_details_access_point_not_switch() {
+        let json_data = json!({
+            "id": "ap-device-id",
+            "macAddress": "aa:bb:cc:dd:ee:ff",
+            "ipAddress": "192.168.1.101",
+            "name": "U6-Pro",
+            "model": "U6-Pro",
+            "supported": true,
+            "state": "ONLINE",
+            "firmwareUpdatable": false,
+            "configurationId": "config123",
+            "features": {
+                "switching": null,
+                "accessPoint": {}
+            },
+            "interfaces": {
+                "ports": [
+                    {
+                        "idx": 1,
+                        "state": "UP",
+                        "connector": "RJ45",
+                        "maxSpeedMbps": 2500,
+                        "speedMbps": 1000
+                    }
+                ],
+                "radios": [
+                    {
+                        "wlanStandard": "802.11ax",
+                        "frequencyGHz": 5,
+                        "channelWidthMHz": 80,
+                        "channel": 36
+                    }
+                ]
+            }
+        });
+
+        let device: DeviceDetails = serde_json::from_value(json_data).unwrap();
+
+        assert!(!device.is_switch());
+        assert!(!device.has_switching());
+        assert!(device.has_access_point());
+        assert_eq!(device.poe_port_count(), 0);
+        assert_eq!(device.radio_count(), 1);
     }
 }

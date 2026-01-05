@@ -141,6 +141,13 @@ impl SiteDevice {
     pub fn has_radios(&self) -> bool {
         self.interfaces.contains(&DeviceInterface::Radios)
     }
+
+    /// Check if the device is a switch (has switching feature but not gateway).
+    /// Note: Gateways like UDM-Pro also have switching capability, so this
+    /// method excludes devices that are primarily gateways.
+    pub fn is_switch(&self) -> bool {
+        self.has_switching() && !self.is_gateway()
+    }
 }
 
 #[cfg(test)]
@@ -342,5 +349,52 @@ mod tests {
         assert_eq!(ports, DeviceInterface::Ports);
         assert_eq!(radios, DeviceInterface::Radios);
         assert_eq!(unknown, DeviceInterface::Unknown);
+    }
+
+    #[test]
+    fn test_site_device_is_switch() {
+        // A pure switch device
+        let switch_json = json!({
+            "id": "switch-id",
+            "macAddress": "aa:bb:cc:dd:ee:ff",
+            "name": "USW-24",
+            "model": "USW-24",
+            "state": "ONLINE",
+            "features": ["switching"],
+            "interfaces": ["ports"]
+        });
+        let switch_device: SiteDevice = serde_json::from_value(switch_json).unwrap();
+        assert!(switch_device.is_switch());
+        assert!(switch_device.has_switching());
+        assert!(!switch_device.is_gateway());
+
+        // An access point is not a switch
+        let ap_json = json!({
+            "id": "ap-id",
+            "macAddress": "aa:bb:cc:dd:ee:ff",
+            "name": "U6-Pro",
+            "model": "U6-Pro",
+            "state": "ONLINE",
+            "features": ["accessPoint"],
+            "interfaces": ["radios"]
+        });
+        let ap_device: SiteDevice = serde_json::from_value(ap_json).unwrap();
+        assert!(!ap_device.is_switch());
+        assert!(!ap_device.has_switching());
+
+        // A gateway with switching capability is NOT considered a switch
+        let gateway_json = json!({
+            "id": "gateway-id",
+            "macAddress": "aa:bb:cc:dd:ee:ff",
+            "name": "UDM-Pro",
+            "model": "UDM-Pro",
+            "state": "ONLINE",
+            "features": ["gateway", "switching"],
+            "interfaces": ["ports"]
+        });
+        let gateway_device: SiteDevice = serde_json::from_value(gateway_json).unwrap();
+        assert!(!gateway_device.is_switch()); // Gateway takes precedence
+        assert!(gateway_device.has_switching());
+        assert!(gateway_device.is_gateway());
     }
 }
