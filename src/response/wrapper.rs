@@ -56,10 +56,46 @@ impl<T> SiteResponse<T> {
     }
 
     /// Get the offset for the next page.
-    pub fn next_offset(&self) -> usize {
-        self.offset + self.limit
+    /// Returns `None` if no valid next offset can be computed.
+    pub fn next_offset(&self) -> Option<usize> {
+        if self.limit > 0 {
+            Some(self.offset + self.limit)
+        } else if self.count > 0 {
+            Some(self.offset + self.count)
+        } else {
+            None
+        }
     }
 }
 
 pub type ListResponse<T> = ApiResponse<Vec<T>>;
 pub type SingleResponse<T> = ApiResponse<T>;
+
+/// Response for create/update operations that return the created/updated entity.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MutationResponse<T> {
+    pub data: T,
+}
+
+/// Response for delete operations.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteResponse {
+    #[serde(default)]
+    pub http_status_code: Option<u16>,
+}
+
+/// Empty response for operations that don't return data.
+#[derive(Debug, Deserialize)]
+pub struct EmptyResponse {}
+
+/// Response for action operations that return a status.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ActionResponse {
+    #[serde(default)]
+    pub success: bool,
+    #[serde(default)]
+    pub message: Option<String>,
+}

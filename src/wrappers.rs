@@ -27,7 +27,11 @@ use crate::api::devices::{GetDevice, GetDeviceDetails, GetDeviceStatistics};
 use crate::error::{Error, Result};
 use crate::models::{DeviceDetails, DeviceStatistics, SiteDevice};
 use crate::stats::{DeviceClientStats, aggregate_clients_by_device};
+use futures::stream::{self, StreamExt};
 use std::collections::HashMap;
+
+/// Maximum number of concurrent API requests when fetching multiple devices.
+const MAX_CONCURRENT_REQUESTS: usize = 10;
 
 /// A device with its detailed information and statistics fetched together.
 ///
@@ -214,9 +218,8 @@ impl UnifiClient {
         // First fetch all devices
         let devices = self.fetch_all_devices(site_id).await?;
 
-        // Then fetch details and stats for each device in parallel
-        let futures: Vec<_> = devices
-            .into_iter()
+        // Then fetch details and stats for each device with bounded concurrency
+        let results: Vec<Result<DeviceWithInfo>> = stream::iter(devices)
             .map(|device| {
                 let site_id = site_id.to_string();
                 let device_id = device.id.clone();
@@ -236,9 +239,12 @@ impl UnifiClient {
                     Ok(DeviceWithInfo::new(device, details, statistics))
                 }
             })
-            .collect();
+            .buffer_unordered(MAX_CONCURRENT_REQUESTS)
+            .collect()
+            .await;
 
-        futures::future::try_join_all(futures).await
+        // Collect results, propagating any errors
+        results.into_iter().collect()
     }
 
     /// Fetch all clients and aggregate statistics by device.

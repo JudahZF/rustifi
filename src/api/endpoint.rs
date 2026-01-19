@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use serde_json::Value;
 
 #[derive(Clone, Copy, Debug)]
 pub enum HttpMethod {
@@ -24,6 +25,13 @@ pub trait Endpoint {
     /// Override this method to add query parameters like pagination.
     fn query_params(&self) -> Vec<(&'static str, String)> {
         vec![]
+    }
+
+    /// Return JSON body for POST/PUT/PATCH requests.
+    /// Override this method when the endpoint needs a request body.
+    /// Returns `Err` if serialization fails, allowing the error to propagate.
+    fn request_body(&self) -> Result<Option<Value>, serde_json::Error> {
+        Ok(None)
     }
 }
 

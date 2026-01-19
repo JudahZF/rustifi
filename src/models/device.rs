@@ -50,10 +50,13 @@ pub struct Device {
     pub temperature: Option<f64>,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Default)]
 pub struct SystemStats {
+    #[serde(default)]
     pub cpu_load: f64,
+    #[serde(default)]
     pub mem_used: i64,
+    #[serde(default)]
     pub mem_total: i64,
 }
 
@@ -85,4 +88,36 @@ pub struct Uplink {
     pub type_: Option<String>,
     #[serde(default)]
     pub state: Option<String>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_system_stats_missing_all_fields() {
+        let json = "{}";
+        let stats: SystemStats = serde_json::from_str(json).unwrap();
+        assert_eq!(stats.cpu_load, 0.0);
+        assert_eq!(stats.mem_used, 0);
+        assert_eq!(stats.mem_total, 0);
+    }
+
+    #[test]
+    fn test_system_stats_missing_some_fields() {
+        let json = r#"{"cpu_load": 45.5}"#;
+        let stats: SystemStats = serde_json::from_str(json).unwrap();
+        assert_eq!(stats.cpu_load, 45.5);
+        assert_eq!(stats.mem_used, 0);
+        assert_eq!(stats.mem_total, 0);
+    }
+
+    #[test]
+    fn test_system_stats_all_fields_present() {
+        let json = r#"{"cpu_load": 25.0, "mem_used": 1024, "mem_total": 4096}"#;
+        let stats: SystemStats = serde_json::from_str(json).unwrap();
+        assert_eq!(stats.cpu_load, 25.0);
+        assert_eq!(stats.mem_used, 1024);
+        assert_eq!(stats.mem_total, 4096);
+    }
 }

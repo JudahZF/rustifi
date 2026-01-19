@@ -1,8 +1,59 @@
 # rustifi
 
-WORK IN PROGRESS
+A Rust API library for UniFi Network controllers.
 
-A rust API library for Unifi Controller.
+## Quick Start
+
+```rust
+use rustifi::UnifiClient;
+
+#[tokio::main]
+async fn main() -> rustifi::Result<()> {
+    // Create a client with strict TLS validation (recommended)
+    let client = UnifiClient::with_api_key(
+        "https://unifi.example.com",
+        "your-api-key"
+    )?;
+
+    // Fetch all sites
+    let sites = client.request::<rustifi::api::sites::GetSites>().await?;
+    for site in sites.data {
+        println!("Site: {} ({})", site.name, site.id);
+    }
+
+    Ok(())
+}
+```
+
+## TLS Certificate Handling
+
+By default, rustifi uses **strict TLS validation** and requires valid certificates.
+
+### For Controllers with Valid Certificates
+
+Use the standard constructors:
+
+```rust
+// These require valid TLS certificates
+let client = UnifiClient::new("https://unifi.example.com")?;
+let client = UnifiClient::with_api_key("https://unifi.example.com", "api-key")?;
+```
+
+### For Local Controllers with Self-Signed Certificates
+
+Many local UniFi controllers use self-signed certificates. For these, use the `_insecure` variants:
+
+```rust
+// WARNING: Only use for local controllers on trusted networks
+let client = UnifiClient::new_insecure("https://192.168.1.1")?;
+let client = UnifiClient::with_api_key_insecure("https://192.168.1.1", "api-key")?;
+```
+
+> **Security Warning**: The `_insecure` methods disable TLS certificate validation,
+> which makes connections vulnerable to man-in-the-middle attacks. Only use these
+> methods for local controllers on trusted networks.
+
+## WORK IN PROGRESS
 
 
 ## To Do

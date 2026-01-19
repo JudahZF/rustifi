@@ -17,11 +17,17 @@ impl UnifiFetcher {
         controller_url: &str,
         api_key: &str,
         base_path: Option<&str>,
+        accept_invalid_certs: bool,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let client = if let Some(path) = base_path {
-            UnifiClient::with_base_path_and_key(controller_url, path, api_key)?
-        } else {
-            UnifiClient::with_api_key(controller_url, api_key)?
+        let client = match (base_path, accept_invalid_certs) {
+            (Some(path), true) => {
+                UnifiClient::with_base_path_and_key_insecure(controller_url, path, api_key)?
+            }
+            (Some(path), false) => {
+                UnifiClient::with_base_path_and_key(controller_url, path, api_key)?
+            }
+            (None, true) => UnifiClient::with_api_key_insecure(controller_url, api_key)?,
+            (None, false) => UnifiClient::with_api_key(controller_url, api_key)?,
         };
         Ok(Self { client })
     }

@@ -24,6 +24,7 @@ pub enum PortConnector {
 pub enum InterfaceState {
     Up,
     Down,
+    #[serde(other)]
     Unknown,
 }
 

@@ -11,6 +11,12 @@ pub enum Error {
     #[error("Response parsing failed: {0}")]
     Parse(String),
 
+    #[error("Request body serialization failed: {0}")]
+    Serialization(#[from] serde_json::Error),
+
+    #[error("Invalid header value: {0}")]
+    InvalidHeader(#[from] reqwest::header::InvalidHeaderValue),
+
     #[error("Endpoint not found: {0}")]
     NotFound(String),
 

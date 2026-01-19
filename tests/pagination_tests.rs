@@ -89,7 +89,7 @@ fn test_site_response_has_more_true() {
     };
 
     assert!(response.has_more());
-    assert_eq!(response.next_offset(), 2);
+    assert_eq!(response.next_offset(), Some(2));
 }
 
 #[test]
@@ -103,7 +103,7 @@ fn test_site_response_has_more_false() {
     };
 
     assert!(!response.has_more());
-    assert_eq!(response.next_offset(), 10);
+    assert_eq!(response.next_offset(), Some(10));
 }
 
 #[test]
@@ -117,7 +117,7 @@ fn test_site_response_empty() {
     };
 
     assert!(!response.has_more());
-    assert_eq!(response.next_offset(), 100);
+    assert_eq!(response.next_offset(), Some(100));
 }
 
 #[test]
@@ -132,7 +132,7 @@ fn test_site_response_exact_page() {
     };
 
     assert!(!response.has_more()); // 90 + 10 = 100, not less than 100
-    assert_eq!(response.next_offset(), 100);
+    assert_eq!(response.next_offset(), Some(100));
 }
 
 #[test]
@@ -147,5 +147,5 @@ fn test_site_response_partial_last_page() {
     };
 
     assert!(!response.has_more()); // 95 + 5 = 100, not less than 100
-    assert_eq!(response.next_offset(), 105);
+    assert_eq!(response.next_offset(), Some(105));
 }

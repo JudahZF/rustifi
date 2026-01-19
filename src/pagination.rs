@@ -126,7 +126,7 @@ impl<'a> Stream for PageStream<'a, Client> {
                 match result {
                     Ok(response) => {
                         self.total_count = Some(response.total_count);
-                        self.offset = response.next_offset();
+                        self.offset = response.next_offset().unwrap_or(self.offset + self.limit);
 
                         if response.data.is_empty() || !response.has_more() {
                             self.done = true;
@@ -174,7 +174,7 @@ impl<'a> Stream for PageStream<'a, SiteDevice> {
                 match result {
                     Ok(response) => {
                         self.total_count = Some(response.total_count);
-                        self.offset = response.next_offset();
+                        self.offset = response.next_offset().unwrap_or(self.offset + self.limit);
 
                         if response.data.is_empty() || !response.has_more() {
                             self.done = true;
@@ -219,7 +219,7 @@ impl UnifiClient {
             let response = self.execute(&endpoint).await?;
 
             let has_more = response.has_more();
-            let next_offset = response.next_offset();
+            let next_offset = response.next_offset().unwrap_or(offset + DEFAULT_PAGE_SIZE);
 
             all_items.extend(response.data);
 
@@ -258,7 +258,7 @@ impl UnifiClient {
             let response = self.execute(&endpoint).await?;
 
             let has_more = response.has_more();
-            let next_offset = response.next_offset();
+            let next_offset = response.next_offset().unwrap_or(offset + DEFAULT_PAGE_SIZE);
 
             all_items.extend(response.data);
 
