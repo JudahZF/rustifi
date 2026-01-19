@@ -4,13 +4,17 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 /// Traffic matching list type.
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TrafficListType {
     IpAddress,
     Domain,
     Port,
     Application,
+    /// Unknown variant for forward compatibility with new server-side list types.
+    #[default]
+    #[serde(other)]
+    Unknown,
 }
 
 /// Traffic matching list.

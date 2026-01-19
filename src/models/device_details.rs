@@ -541,21 +541,22 @@ mod tests {
 
     #[test]
     fn test_device_details_real_world_response() {
-        // Test with real response from user's device
+        // Test with anonymized response based on real device structure
+        // Uses RFC 5737 test IP (198.51.100.x) and RFC 7042 example MAC (00:00:5e:00:53:xx)
         let json_data = json!({
-            "id": "4dd8e91c-9997-3736-9480-3c8591c47452",
-            "macAddress": "1c:0b:8b:3e:5c:16",
-            "ipAddress": "92.18.58.32",
-            "name": "Battin Lane UX7",
+            "id": "device-0001-0000-0000-000000000001",
+            "macAddress": "00:00:5e:00:53:01",
+            "ipAddress": "198.51.100.1",
+            "name": "Test Device UX7",
             "model": "Express 7",
             "supported": true,
             "state": "ONLINE",
             "firmwareVersion": "5.0.10",
             "firmwareUpdatable": false,
             "provisionedAt": "2025-12-30T21:27:06Z",
-            "configurationId": "b4aae6c29779cbea",
+            "configurationId": "config-0001",
             "uplink": {
-                "deviceId": "parent-device-id"
+                "deviceId": "uplink-device-0001"
             },
             "features": {
                 "switching": {},
@@ -604,8 +605,8 @@ mod tests {
         let device: DeviceDetails =
             serde_json::from_value(json_data).expect("Failed to deserialize real-world response");
 
-        assert_eq!(device.id, "4dd8e91c-9997-3736-9480-3c8591c47452");
-        assert_eq!(device.name, "Battin Lane UX7");
+        assert_eq!(device.id, "device-0001-0000-0000-000000000001");
+        assert_eq!(device.name, "Test Device UX7");
         assert_eq!(device.model, "Express 7");
         assert!(device.supported);
         assert_eq!(device.state, "ONLINE");

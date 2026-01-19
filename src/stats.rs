@@ -7,12 +7,11 @@
 //!
 //! ```no_run
 //! use rustifi::UnifiClient;
-//! use rustifi::stats::aggregate_clients_by_device;
 //!
 //! # async fn example() -> rustifi::Result<()> {
 //! let client = UnifiClient::with_api_key("https://unifi.example.com", "api-key")?;
 //!
-//! // Fetch all clients and aggregate by device
+//! // Fetch all clients and aggregate by device using the convenience method
 //! let stats = client.fetch_client_stats_by_device("site-id").await?;
 //!
 //! for (device_id, device_stats) in &stats {

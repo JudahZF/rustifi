@@ -69,8 +69,9 @@ impl<'a> PageStream<'a, Client> {
     }
 
     /// Set the page size (limit).
+    /// A size of 0 is normalized to 1 to prevent empty page requests.
     pub fn page_size(mut self, size: usize) -> Self {
-        self.limit = size;
+        self.limit = if size == 0 { 1 } else { size };
         self
     }
 }
@@ -90,8 +91,9 @@ impl<'a> PageStream<'a, SiteDevice> {
     }
 
     /// Set the page size (limit).
+    /// A size of 0 is normalized to 1 to prevent empty page requests.
     pub fn page_size(mut self, size: usize) -> Self {
-        self.limit = size;
+        self.limit = if size == 0 { 1 } else { size };
         self
     }
 }

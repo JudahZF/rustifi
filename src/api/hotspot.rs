@@ -214,3 +214,128 @@ impl Endpoint for DeleteVoucher {
         format!("sites/{}/hotspot/vouchers/{}", self.site_id, self.id)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_vouchers_build_path() {
+        let endpoint = GetVouchers::new("site-123");
+        assert_eq!(endpoint.build_path(), "sites/site-123/hotspot/vouchers");
+    }
+
+    #[test]
+    fn test_get_vouchers_path_and_method() {
+        assert_eq!(GetVouchers::PATH, "sites/{site_id}/hotspot/vouchers");
+        assert!(matches!(GetVouchers::METHOD, HttpMethod::Get));
+    }
+
+    #[test]
+    fn test_get_vouchers_no_pagination() {
+        let endpoint = GetVouchers::new("site-123");
+        let params = endpoint.query_params();
+        assert!(params.is_empty());
+    }
+
+    #[test]
+    fn test_get_vouchers_with_pagination() {
+        let endpoint = GetVouchers::with_pagination("site-123", 10, 25);
+        let params = endpoint.query_params();
+        assert_eq!(params.len(), 2);
+        assert!(params.contains(&("offset", "10".to_string())));
+        assert!(params.contains(&("limit", "25".to_string())));
+    }
+
+    #[test]
+    fn test_get_vouchers_offset_only() {
+        let endpoint = GetVouchers::new("site-123").offset(5);
+        let params = endpoint.query_params();
+        assert_eq!(params.len(), 1);
+        assert!(params.contains(&("offset", "5".to_string())));
+    }
+
+    #[test]
+    fn test_get_vouchers_limit_only() {
+        let endpoint = GetVouchers::new("site-123").limit(50);
+        let params = endpoint.query_params();
+        assert_eq!(params.len(), 1);
+        assert!(params.contains(&("limit", "50".to_string())));
+    }
+
+    #[test]
+    fn test_get_voucher_build_path() {
+        let endpoint = GetVoucher::new("site-123", "voucher-456");
+        assert_eq!(
+            endpoint.build_path(),
+            "sites/site-123/hotspot/vouchers/voucher-456"
+        );
+    }
+
+    #[test]
+    fn test_get_voucher_path_and_method() {
+        assert_eq!(GetVoucher::PATH, "sites/{site_id}/hotspot/vouchers/{id}");
+        assert!(matches!(GetVoucher::METHOD, HttpMethod::Get));
+    }
+
+    #[test]
+    fn test_generate_vouchers_build_path() {
+        let request = GenerateVouchersRequest::new(5);
+        let endpoint = GenerateVouchers::new("site-123", request);
+        assert_eq!(endpoint.build_path(), "sites/site-123/hotspot/vouchers");
+    }
+
+    #[test]
+    fn test_generate_vouchers_path_and_method() {
+        assert_eq!(GenerateVouchers::PATH, "sites/{site_id}/hotspot/vouchers");
+        assert!(matches!(GenerateVouchers::METHOD, HttpMethod::Post));
+    }
+
+    #[test]
+    fn test_generate_vouchers_request_body_minimal() {
+        let request = GenerateVouchersRequest::new(3);
+        let endpoint = GenerateVouchers::new("site-123", request);
+        let body = endpoint.request_body().unwrap().unwrap();
+
+        assert_eq!(body["count"], 3);
+        assert!(body.get("durationMinutes").is_none());
+        assert!(body.get("dataLimitMb").is_none());
+        assert!(body.get("bandwidthLimitDown").is_none());
+        assert!(body.get("bandwidthLimitUp").is_none());
+        assert!(body.get("note").is_none());
+    }
+
+    #[test]
+    fn test_generate_vouchers_request_body_full() {
+        let request = GenerateVouchersRequest::new(10)
+            .duration_minutes(60)
+            .data_limit_mb(1024)
+            .bandwidth_limit_down(10000)
+            .bandwidth_limit_up(5000)
+            .note("Test vouchers");
+        let endpoint = GenerateVouchers::new("site-123", request);
+        let body = endpoint.request_body().unwrap().unwrap();
+
+        assert_eq!(body["count"], 10);
+        assert_eq!(body["durationMinutes"], 60);
+        assert_eq!(body["dataLimitMb"], 1024);
+        assert_eq!(body["bandwidthLimitDown"], 10000);
+        assert_eq!(body["bandwidthLimitUp"], 5000);
+        assert_eq!(body["note"], "Test vouchers");
+    }
+
+    #[test]
+    fn test_delete_voucher_build_path() {
+        let endpoint = DeleteVoucher::new("site-123", "voucher-789");
+        assert_eq!(
+            endpoint.build_path(),
+            "sites/site-123/hotspot/vouchers/voucher-789"
+        );
+    }
+
+    #[test]
+    fn test_delete_voucher_path_and_method() {
+        assert_eq!(DeleteVoucher::PATH, "sites/{site_id}/hotspot/vouchers/{id}");
+        assert!(matches!(DeleteVoucher::METHOD, HttpMethod::Delete));
+    }
+}

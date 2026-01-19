@@ -56,8 +56,11 @@ impl<T> SiteResponse<T> {
     }
 
     /// Get the offset for the next page.
-    /// Returns `None` if no valid next offset can be computed.
+    /// Returns `None` if there are no more pages or no valid offset can be computed.
     pub fn next_offset(&self) -> Option<usize> {
+        if !self.has_more() {
+            return None;
+        }
         if self.limit > 0 {
             Some(self.offset + self.limit)
         } else if self.count > 0 {

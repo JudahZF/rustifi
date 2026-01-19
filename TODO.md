@@ -75,7 +75,7 @@ let sites = client.request::<ListSites>().await?;
 
 ## How to Add New Endpoints
 
-1. Define endpoint struct in `src/api/endpoints.rs`:
+1. Define endpoint struct in `src/api/endpoint.rs`:
 ```rust
 #[derive(Debug)]
 pub struct GetDevices;

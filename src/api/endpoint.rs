@@ -35,28 +35,6 @@ pub trait Endpoint {
     }
 }
 
-pub struct EndpointBuilder {
-    path: String,
-    method: HttpMethod,
-}
-
-impl EndpointBuilder {
-    pub fn new(path: impl Into<String>, method: HttpMethod) -> Self {
-        Self {
-            path: path.into(),
-            method,
-        }
-    }
-
-    pub fn path(&self) -> &str {
-        &self.path
-    }
-
-    pub fn method(&self) -> HttpMethod {
-        self.method
-    }
-}
-
 #[macro_export]
 macro_rules! endpoint {
     ($name:ident => $path:expr, GET) => {
