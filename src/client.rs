@@ -118,7 +118,9 @@ impl UnifiClient {
             .timeout(std::time::Duration::from_secs(60));
 
         if accept_invalid_certs {
-            builder = builder.danger_accept_invalid_certs(true);
+            builder = builder
+                .danger_accept_invalid_certs(true)
+                .danger_accept_invalid_hostnames(true);
         }
 
         let http = builder.build()?;

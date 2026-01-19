@@ -334,9 +334,303 @@ impl UnifiClient {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::response::SiteResponse;
 
     #[test]
     fn test_default_page_size() {
         assert_eq!(DEFAULT_PAGE_SIZE, 100);
+    }
+
+    // Tests for SiteResponse pagination helpers
+
+    #[test]
+    fn test_site_response_has_more_with_remaining_pages() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 0,
+            limit: 10,
+            count: 10,
+            total_count: 100,
+        };
+        assert!(response.has_more());
+    }
+
+    #[test]
+    fn test_site_response_has_more_on_last_page() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 90,
+            limit: 10,
+            count: 10,
+            total_count: 100,
+        };
+        assert!(!response.has_more());
+    }
+
+    #[test]
+    fn test_site_response_has_more_partial_last_page() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 95,
+            limit: 10,
+            count: 5,
+            total_count: 100,
+        };
+        assert!(!response.has_more());
+    }
+
+    #[test]
+    fn test_site_response_next_offset_with_more_pages() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 0,
+            limit: 10,
+            count: 10,
+            total_count: 100,
+        };
+        assert_eq!(response.next_offset(), Some(10));
+    }
+
+    #[test]
+    fn test_site_response_next_offset_on_last_page() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 90,
+            limit: 10,
+            count: 10,
+            total_count: 100,
+        };
+        assert_eq!(response.next_offset(), None);
+    }
+
+    #[test]
+    fn test_site_response_next_offset_empty_response() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec![],
+            offset: 0,
+            limit: 10,
+            count: 0,
+            total_count: 0,
+        };
+        assert_eq!(response.next_offset(), None);
+    }
+
+    #[test]
+    fn test_site_response_next_offset_uses_limit_when_available() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 0,
+            limit: 25,
+            count: 10,
+            total_count: 100,
+        };
+        assert_eq!(response.next_offset(), Some(25));
+    }
+
+    #[test]
+    fn test_site_response_next_offset_uses_count_when_limit_zero() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item1".to_string()],
+            offset: 0,
+            limit: 0,
+            count: 10,
+            total_count: 100,
+        };
+        assert_eq!(response.next_offset(), Some(10));
+    }
+
+    // Tests for pagination logic simulation
+
+    #[test]
+    fn test_pagination_logic_single_page() {
+        // Simulate fetching a single page where total_count <= limit
+        let mut all_items: Vec<String> = Vec::new();
+
+        // First (and only) page
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["a".to_string(), "b".to_string(), "c".to_string()],
+            offset: 0,
+            limit: 100,
+            count: 3,
+            total_count: 3,
+        };
+
+        all_items.extend(response.data.clone());
+        let has_more = response.has_more();
+
+        // Verify pagination terminates correctly
+        assert!(!has_more);
+        assert_eq!(all_items.len(), 3);
+        assert_eq!(response.next_offset(), None); // No more pages
+    }
+
+    #[test]
+    fn test_pagination_logic_multiple_pages() {
+        // Simulate fetching multiple pages
+        let mut all_items: Vec<String> = Vec::new();
+        let mut offset = 0;
+        let limit = 2;
+
+        // First page
+        let page1: SiteResponse<String> = SiteResponse {
+            data: vec!["a".to_string(), "b".to_string()],
+            offset: 0,
+            limit,
+            count: 2,
+            total_count: 5,
+        };
+
+        all_items.extend(page1.data.clone());
+        assert!(page1.has_more());
+        offset = page1.next_offset().unwrap_or(offset + limit);
+        assert_eq!(offset, 2);
+
+        // Second page
+        let page2: SiteResponse<String> = SiteResponse {
+            data: vec!["c".to_string(), "d".to_string()],
+            offset: 2,
+            limit,
+            count: 2,
+            total_count: 5,
+        };
+
+        all_items.extend(page2.data.clone());
+        assert!(page2.has_more());
+        offset = page2.next_offset().unwrap_or(offset + limit);
+        assert_eq!(offset, 4);
+
+        // Third (last) page
+        let page3: SiteResponse<String> = SiteResponse {
+            data: vec!["e".to_string()],
+            offset: 4,
+            limit,
+            count: 1,
+            total_count: 5,
+        };
+
+        all_items.extend(page3.data.clone());
+        assert!(!page3.has_more());
+
+        assert_eq!(all_items.len(), 5);
+        assert_eq!(all_items, vec!["a", "b", "c", "d", "e"]);
+    }
+
+    #[test]
+    fn test_pagination_logic_empty_result() {
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec![],
+            offset: 0,
+            limit: 100,
+            count: 0,
+            total_count: 0,
+        };
+
+        assert!(!response.has_more());
+        assert!(response.data.is_empty());
+    }
+
+    #[test]
+    fn test_pagination_logic_exact_page_boundary() {
+        // When total_count is exactly divisible by limit
+        let mut all_items: Vec<String> = Vec::new();
+
+        // First page
+        let page1: SiteResponse<String> = SiteResponse {
+            data: vec!["a".to_string(), "b".to_string()],
+            offset: 0,
+            limit: 2,
+            count: 2,
+            total_count: 4,
+        };
+        all_items.extend(page1.data.clone());
+        assert!(page1.has_more());
+
+        // Second (last) page - offset + count == total_count
+        let page2: SiteResponse<String> = SiteResponse {
+            data: vec!["c".to_string(), "d".to_string()],
+            offset: 2,
+            limit: 2,
+            count: 2,
+            total_count: 4,
+        };
+        all_items.extend(page2.data.clone());
+        assert!(!page2.has_more());
+
+        assert_eq!(all_items.len(), 4);
+    }
+
+    // Tests for PageStream page_size zero guard
+
+    #[test]
+    fn test_page_stream_page_size_zero_guard() {
+        // We can't easily create a PageStream without a client, but we can verify
+        // the zero guard logic by testing the SiteResponse next_offset behavior
+        // which is used by the stream
+
+        // When limit is 0, next_offset should use count
+        let response: SiteResponse<String> = SiteResponse {
+            data: vec!["item".to_string()],
+            offset: 0,
+            limit: 0,
+            count: 1,
+            total_count: 10,
+        };
+
+        // With limit=0, next_offset uses count
+        assert_eq!(response.next_offset(), Some(1));
+    }
+
+    // Tests for endpoint query parameter construction
+
+    #[test]
+    fn test_get_clients_pagination_params() {
+        use crate::api::clients::GetClients;
+        use crate::api::Endpoint;
+
+        let endpoint = GetClients::with_pagination("site-123", 50, 25);
+        let params = endpoint.query_params();
+
+        assert_eq!(params.len(), 2);
+        assert!(params.contains(&("offset", "50".to_string())));
+        assert!(params.contains(&("limit", "25".to_string())));
+    }
+
+    #[test]
+    fn test_get_devices_pagination_params() {
+        use crate::api::devices::GetDevices;
+        use crate::api::Endpoint;
+
+        let endpoint = GetDevices::with_pagination("site-456", 100, 50);
+        let params = endpoint.query_params();
+
+        assert_eq!(params.len(), 2);
+        assert!(params.contains(&("offset", "100".to_string())));
+        assert!(params.contains(&("limit", "50".to_string())));
+    }
+
+    #[test]
+    fn test_get_clients_builder_pagination() {
+        use crate::api::clients::GetClients;
+        use crate::api::Endpoint;
+
+        let endpoint = GetClients::new("site-123").offset(20).limit(10);
+        let params = endpoint.query_params();
+
+        assert_eq!(params.len(), 2);
+        assert!(params.contains(&("offset", "20".to_string())));
+        assert!(params.contains(&("limit", "10".to_string())));
+    }
+
+    #[test]
+    fn test_get_devices_builder_pagination() {
+        use crate::api::devices::GetDevices;
+        use crate::api::Endpoint;
+
+        let endpoint = GetDevices::new("site-456").offset(30).limit(15);
+        let params = endpoint.query_params();
+
+        assert_eq!(params.len(), 2);
+        assert!(params.contains(&("offset", "30".to_string())));
+        assert!(params.contains(&("limit", "15".to_string())));
     }
 }
