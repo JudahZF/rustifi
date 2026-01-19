@@ -22,11 +22,11 @@
 //! # }
 //! ```
 
-use crate::UnifiClient;
 use crate::api::devices::{GetDevice, GetDeviceDetails, GetDeviceStatistics};
 use crate::error::{Error, Result};
 use crate::models::{DeviceDetails, DeviceStatistics, SiteDevice};
-use crate::stats::{DeviceClientStats, aggregate_clients_by_device};
+use crate::stats::{aggregate_clients_by_device, DeviceClientStats};
+use crate::UnifiClient;
 use futures::stream::{self, StreamExt};
 use std::collections::HashMap;
 
@@ -190,6 +190,9 @@ impl UnifiClient {
     /// This method first fetches all devices, then fetches details and statistics
     /// for each device in parallel. This is more efficient than making sequential
     /// calls for each device.
+    ///
+    /// **Note:** The returned order may differ from the original device list order
+    /// due to parallel request processing.
     ///
     /// # Arguments
     ///

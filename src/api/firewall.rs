@@ -443,7 +443,7 @@ impl ReorderFirewallPolicies {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct ReorderRequest {
     policy_ids: Vec<String>,

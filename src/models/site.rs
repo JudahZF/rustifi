@@ -16,10 +16,9 @@ pub struct Site {
 
 impl Site {
     pub fn display_name(&self) -> &str {
-        if let Some(desc) = &self.desc {
-            if desc.is_empty() { &self.name } else { desc }
-        } else {
-            &self.name
-        }
+        self.desc
+            .as_ref()
+            .filter(|d| !d.is_empty())
+            .map_or(&self.name, |d| d.as_str())
     }
 }

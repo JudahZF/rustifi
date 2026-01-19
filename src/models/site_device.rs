@@ -175,7 +175,10 @@ mod tests {
 
         assert_eq!(device.id, "497f6eca-6276-4993-bfeb-53cbbbba6f08");
         assert_eq!(device.mac_address.as_str(), "94:2a:6f:26:c6:ca");
-        assert_eq!(device.ip_address.as_ref().unwrap().as_str(), "192.168.1.55");
+        assert_eq!(
+            device.ip_address.as_ref().unwrap().to_string(),
+            "192.168.1.55"
+        );
         assert_eq!(device.name, "IW HD");
         assert_eq!(device.model, "UHDIW");
         assert_eq!(device.state, DeviceState::Online);

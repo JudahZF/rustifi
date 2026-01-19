@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 /// Statistics for a device, retrieved from the latest statistics endpoint.
 /// Endpoint: GET /v1/sites/{site_id}/devices/{device_id}/statistics/latest
-#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct DeviceStatistics {
     /// Device uptime in seconds.
@@ -124,5 +124,120 @@ impl StatisticsUplink {
     /// Returns the receive rate in megabits per second.
     pub fn rx_rate_mbps(&self) -> f64 {
         self.rx_rate_bps as f64 / 1_000_000.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_uptime_formatted_days() {
+        let stats = DeviceStatistics {
+            uptime_sec: 90061, // 1 day, 1 hour, 1 minute, 1 second
+            ..Default::default()
+        };
+        assert_eq!(stats.uptime_formatted(), "1d 1h 1m 1s");
+    }
+
+    #[test]
+    fn test_uptime_formatted_hours() {
+        let stats = DeviceStatistics {
+            uptime_sec: 3661, // 1 hour, 1 minute, 1 second
+            ..Default::default()
+        };
+        assert_eq!(stats.uptime_formatted(), "1h 1m 1s");
+    }
+
+    #[test]
+    fn test_uptime_formatted_minutes() {
+        let stats = DeviceStatistics {
+            uptime_sec: 61, // 1 minute, 1 second
+            ..Default::default()
+        };
+        assert_eq!(stats.uptime_formatted(), "1m 1s");
+    }
+
+    #[test]
+    fn test_uptime_formatted_seconds_only() {
+        let stats = DeviceStatistics {
+            uptime_sec: 45,
+            ..Default::default()
+        };
+        assert_eq!(stats.uptime_formatted(), "45s");
+    }
+
+    #[test]
+    fn test_uptime_formatted_zero() {
+        let stats = DeviceStatistics {
+            uptime_sec: 0,
+            ..Default::default()
+        };
+        assert_eq!(stats.uptime_formatted(), "0s");
+    }
+
+    #[test]
+    fn test_total_uplink_bps_with_uplink() {
+        let stats = DeviceStatistics {
+            uplink: Some(StatisticsUplink {
+                tx_rate_bps: 1_000_000,
+                rx_rate_bps: 2_000_000,
+            }),
+            ..Default::default()
+        };
+        assert_eq!(stats.total_uplink_bps(), Some(3_000_000));
+    }
+
+    #[test]
+    fn test_total_uplink_bps_without_uplink() {
+        let stats = DeviceStatistics::default();
+        assert_eq!(stats.total_uplink_bps(), None);
+    }
+
+    #[test]
+    fn test_has_radios_true() {
+        let stats = DeviceStatistics {
+            interfaces: Some(StatisticsInterfaces {
+                radios: vec![RadioStatistics {
+                    frequency_ghz: Some(5.0),
+                    tx_retries_pct: Some(1.5),
+                }],
+            }),
+            ..Default::default()
+        };
+        assert!(stats.has_radios());
+    }
+
+    #[test]
+    fn test_has_radios_empty() {
+        let stats = DeviceStatistics {
+            interfaces: Some(StatisticsInterfaces { radios: vec![] }),
+            ..Default::default()
+        };
+        assert!(!stats.has_radios());
+    }
+
+    #[test]
+    fn test_has_radios_no_interfaces() {
+        let stats = DeviceStatistics::default();
+        assert!(!stats.has_radios());
+    }
+
+    #[test]
+    fn test_tx_rate_mbps() {
+        let uplink = StatisticsUplink {
+            tx_rate_bps: 100_000_000, // 100 Mbps
+            rx_rate_bps: 0,
+        };
+        assert!((uplink.tx_rate_mbps() - 100.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_rx_rate_mbps() {
+        let uplink = StatisticsUplink {
+            tx_rate_bps: 0,
+            rx_rate_bps: 50_000_000, // 50 Mbps
+        };
+        assert!((uplink.rx_rate_mbps() - 50.0).abs() < 0.001);
     }
 }

@@ -82,7 +82,7 @@ pub struct MutationResponse<T> {
 }
 
 /// Response for delete operations.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DeleteResponse {
     #[serde(default)]
@@ -90,11 +90,11 @@ pub struct DeleteResponse {
 }
 
 /// Empty response for operations that don't return data.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct EmptyResponse {}
 
 /// Response for action operations that return a status.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ActionResponse {
     #[serde(default)]

@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use std::fmt;
 use std::net::Ipv4Addr;
 use std::str::FromStr;
 
@@ -9,9 +10,11 @@ impl IpAddress {
     pub fn new(addr: Ipv4Addr) -> Self {
         IpAddress(addr)
     }
+}
 
-    pub fn as_str(&self) -> String {
-        self.0.to_string()
+impl fmt::Display for IpAddress {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -55,7 +58,7 @@ impl<'de> Deserialize<'de> for MacAddress {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Timestamp(pub i64);
 
 impl Timestamp {

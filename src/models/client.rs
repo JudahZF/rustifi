@@ -196,4 +196,21 @@ mod tests {
         assert_eq!(guest, AccessType::Guest);
         assert_eq!(unknown, AccessType::Unknown);
     }
+
+    #[test]
+    fn test_is_connected() {
+        let connected = Client {
+            id: "client-1".to_string(),
+            connected_at: Some("2024-01-01T12:00:00Z".to_string()),
+            ..Default::default()
+        };
+        assert!(connected.is_connected());
+
+        let disconnected = Client {
+            id: "client-2".to_string(),
+            connected_at: None,
+            ..Default::default()
+        };
+        assert!(!disconnected.is_connected());
+    }
 }

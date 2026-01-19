@@ -25,12 +25,12 @@
 //! # }
 //! ```
 
-use crate::UnifiClient;
 use crate::api::clients::GetClients;
 use crate::api::devices::GetDevices;
 use crate::error::Result;
 use crate::models::{Client, SiteDevice};
 use crate::response::SiteResponse;
+use crate::UnifiClient;
 use futures::stream::Stream;
 use std::pin::Pin;
 use std::task::{Context, Poll};

@@ -1,5 +1,5 @@
 use rustifi::models::{AccessType, Client, ClientAccess, ClientType};
-use rustifi::stats::{DeviceClientStats, aggregate_clients_by_device, get_device_client_stats};
+use rustifi::stats::{aggregate_clients_by_device, get_device_client_stats, DeviceClientStats};
 
 fn make_client(
     id: &str,

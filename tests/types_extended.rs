@@ -18,7 +18,10 @@ fn test_client_deserialization() {
 
     assert_eq!(client.id, "497f6eca-6276-4993-bfeb-53cbbbba6f08");
     assert_eq!(client.name, Some("My Laptop".to_string()));
-    assert_eq!(client.ip_address.as_ref().unwrap().as_str(), "192.168.1.50");
+    assert_eq!(
+        client.ip_address.as_ref().unwrap().to_string(),
+        "192.168.1.50"
+    );
     assert_eq!(client.client_type, ClientType::Wireless);
     assert_eq!(
         client.connected_at,

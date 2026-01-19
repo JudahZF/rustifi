@@ -1,6 +1,6 @@
-use rustifi::api::Endpoint;
 use rustifi::api::clients::GetClients;
 use rustifi::api::devices::GetDevices;
+use rustifi::api::Endpoint;
 use rustifi::pagination::DEFAULT_PAGE_SIZE;
 use rustifi::response::SiteResponse;
 
@@ -134,7 +134,7 @@ fn test_site_response_exact_page() {
     };
 
     assert!(!response.has_more()); // 90 + 10 = 100, not less than 100
-    // next_offset() returns None when there are no more pages
+                                   // next_offset() returns None when there are no more pages
     assert_eq!(response.next_offset(), None);
 }
 
@@ -150,6 +150,6 @@ fn test_site_response_partial_last_page() {
     };
 
     assert!(!response.has_more()); // 95 + 5 = 100, not less than 100
-    // next_offset() returns None when there are no more pages
+                                   // next_offset() returns None when there are no more pages
     assert_eq!(response.next_offset(), None);
 }

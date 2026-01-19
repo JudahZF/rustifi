@@ -7,15 +7,15 @@ pub mod response;
 pub mod stats;
 pub mod wrappers;
 
-pub use client::{REMOTE_API_URL, UnifiClient};
+pub use client::{UnifiClient, REMOTE_API_URL};
 pub use error::{Error, Result};
 pub use pagination::DEFAULT_PAGE_SIZE;
-pub use stats::{DeviceClientStats, aggregate_clients_by_device, get_device_client_stats};
+pub use stats::{aggregate_clients_by_device, get_device_client_stats, DeviceClientStats};
 pub use wrappers::DeviceWithInfo;
 
 pub mod prelude {
-    pub use crate::api::Endpoint;
     pub use crate::api::networks::{Network, NetworkRequest};
+    pub use crate::api::Endpoint;
     pub use crate::client::UnifiClient;
     pub use crate::error::{Error, Result};
     pub use crate::models::{

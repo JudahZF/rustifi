@@ -2,6 +2,7 @@ use crate::api::endpoint::{Endpoint, HttpMethod};
 use crate::models::Site;
 use crate::response::ApiResponse;
 
+/// Fetches all sites from the controller.
 #[derive(Debug, Default)]
 pub struct GetSites;
 

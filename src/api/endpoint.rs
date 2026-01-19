@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum HttpMethod {
     Get,
     Post,
@@ -62,6 +62,13 @@ macro_rules! endpoint {
         impl $crate::api::Endpoint for $name {
             const PATH: &'static str = $path;
             const METHOD: $crate::api::HttpMethod = $crate::api::HttpMethod::Delete;
+            type Response = ();
+        }
+    };
+    ($name:ident => $path:expr, PATCH) => {
+        impl $crate::api::Endpoint for $name {
+            const PATH: &'static str = $path;
+            const METHOD: $crate::api::HttpMethod = $crate::api::HttpMethod::Patch;
             type Response = ();
         }
     };

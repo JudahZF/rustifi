@@ -26,8 +26,8 @@ fn test_api_response_deserialization() {
 
     let response: ApiResponse<Vec<MockSite>> = serde_json::from_value(json_data).unwrap();
 
-    assert!(response.meta.is_some());
-    assert_eq!(response.meta.unwrap().rc, "ok");
+    let meta = response.meta.expect("meta should be present");
+    assert_eq!(meta.rc, "ok");
     assert_eq!(response.data.len(), 1);
     assert_eq!(response.data[0].id, "site1");
 }

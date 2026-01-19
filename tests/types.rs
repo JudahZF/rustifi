@@ -16,9 +16,9 @@ fn test_ip_address_default() {
 }
 
 #[test]
-fn test_ip_address_as_str() {
+fn test_ip_address_to_string() {
     let ip = IpAddress::new(Ipv4Addr::new(10, 0, 0, 1));
-    assert_eq!(ip.as_str(), "10.0.0.1");
+    assert_eq!(ip.to_string(), "10.0.0.1");
 }
 
 #[test]

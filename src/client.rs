@@ -1,6 +1,6 @@
 use crate::api::endpoint::{Endpoint, HttpMethod};
 use crate::error::Result;
-use reqwest::{Client, cookie::Jar};
+use reqwest::{cookie::Jar, Client};
 use std::sync::Arc;
 
 /// The base URL for the UniFi remote cloud API.
@@ -113,7 +113,9 @@ impl UnifiClient {
         let mut builder = Client::builder()
             .user_agent("rustifi/1.0")
             .cookie_store(true)
-            .cookie_provider(cookie_store);
+            .cookie_provider(cookie_store)
+            .connect_timeout(std::time::Duration::from_secs(30))
+            .timeout(std::time::Duration::from_secs(60));
 
         if accept_invalid_certs {
             builder = builder.danger_accept_invalid_certs(true);
@@ -260,6 +262,8 @@ impl UnifiClient {
             .user_agent("rustifi/1.0")
             .cookie_store(true)
             .cookie_provider(cookie_store)
+            .connect_timeout(std::time::Duration::from_secs(30))
+            .timeout(std::time::Duration::from_secs(60))
             .build()?;
 
         Ok(Self {
