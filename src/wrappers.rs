@@ -22,7 +22,7 @@
 //! # }
 //! ```
 
-use crate::api::devices::{GetDevice, GetDeviceDetails, GetDeviceStatistics};
+use crate::api::devices::{GetDeviceDetails, GetDeviceStatistics, GetDevices};
 use crate::error::{Error, Result};
 use crate::models::{DeviceDetails, DeviceStatistics, SiteDevice};
 use crate::stats::{aggregate_clients_by_device, DeviceClientStats};
@@ -162,22 +162,22 @@ impl UnifiClient {
         device_id: &str,
     ) -> Result<DeviceWithInfo> {
         // Create endpoints before the join to ensure they live long enough
-        let device_endpoint = GetDevice::new(site_id, device_id);
+        let devices_endpoint = GetDevices::new(site_id);
         let details_endpoint = GetDeviceDetails::new(site_id, device_id);
         let stats_endpoint = GetDeviceStatistics::new(site_id, device_id);
 
         // Fetch all three in parallel
-        let (device_result, details_result, stats_result) = tokio::join!(
-            self.execute(&device_endpoint),
+        let (devices_result, details_result, stats_result) = tokio::join!(
+            self.execute(&devices_endpoint),
             self.execute(&details_endpoint),
             self.execute(&stats_endpoint),
         );
 
-        let device_response = device_result?;
-        let device = device_response
+        let devices_response = devices_result?;
+        let device = devices_response
             .data
             .into_iter()
-            .next()
+            .find(|d| d.id == device_id)
             .ok_or_else(|| Error::NotFound(format!("Device {} not found", device_id)))?;
         let details = details_result?;
         let statistics = stats_result?;

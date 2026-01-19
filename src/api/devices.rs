@@ -66,33 +66,6 @@ impl Endpoint for GetDevices {
     }
 }
 
-/// Fetch a specific device by ID within a site.
-/// Endpoint: GET /v1/sites/{site_id}/devices/{id}
-#[derive(Debug, Clone)]
-pub struct GetDevice {
-    pub site_id: String,
-    pub id: String,
-}
-
-impl GetDevice {
-    pub fn new(site_id: impl Into<String>, id: impl Into<String>) -> Self {
-        Self {
-            site_id: site_id.into(),
-            id: id.into(),
-        }
-    }
-}
-
-impl Endpoint for GetDevice {
-    const PATH: &'static str = "sites/{site_id}/devices/{id}";
-    const METHOD: HttpMethod = HttpMethod::Get;
-    type Response = SiteResponse<SiteDevice>;
-
-    fn build_path(&self) -> String {
-        format!("sites/{}/devices/{}", self.site_id, self.id)
-    }
-}
-
 /// Fetch detailed information about a specific device within a site.
 /// This endpoint returns comprehensive details including physical interfaces,
 /// features, and configuration information.

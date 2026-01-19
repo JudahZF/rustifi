@@ -4,7 +4,6 @@ use serde::Deserialize;
 #[derive(Clone, Debug, Deserialize, PartialEq, Eq, Default)]
 pub enum DeviceType {
     #[serde(alias = "uap")]
-    #[default]
     AccessPoint,
     #[serde(alias = "usw")]
     Switch,
@@ -13,6 +12,7 @@ pub enum DeviceType {
     #[serde(alias = "ugw")]
     Gateway,
     #[serde(other)]
+    #[default]
     Unknown,
 }
 
