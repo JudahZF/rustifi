@@ -1,136 +1,177 @@
 # rustifi
 
-A Rust API library for UniFi Network controllers.
+Open source Rust client for the UniFi Network API.
+
+`rustifi` gives you typed endpoint definitions, async request execution, pagination helpers, and higher-level wrappers for common UniFi workflows.
+
+## Features
+
+- Async API client built on `reqwest` + `tokio`
+- Typed endpoint modules (`sites`, `devices`, `clients`, `networks`, `wifi`, and more)
+- Local controller support and remote cloud access via `api.ui.com`
+- Safe-by-default TLS constructors, plus explicit insecure variants for self-signed local setups
+- Pagination helpers: fetch everything at once or stream page by page
+- Utility wrappers for device details/statistics and client aggregation
+
+## Installation
+
+```bash
+cargo add rustifi
+cargo add tokio --features rt-multi-thread,macros
+```
+
+If you use streaming helpers, also add:
+
+```bash
+cargo add futures
+```
 
 ## Quick Start
 
 ```rust
+use rustifi::api::sites::GetSites;
 use rustifi::UnifiClient;
 
 #[tokio::main]
 async fn main() -> rustifi::Result<()> {
-    // Create a client with strict TLS validation (recommended)
     let client = UnifiClient::with_api_key(
         "https://unifi.example.com",
-        "your-api-key"
+        "your-api-key",
     )?;
 
-    // Fetch all sites
-    let sites = client.request::<rustifi::api::sites::GetSites>().await?;
+    let sites = client.request::<GetSites>().await?;
     for site in sites.data {
-        println!("Site: {} ({})", site.name, site.id);
+        println!("{} ({})", site.name, site.id);
     }
 
     Ok(())
 }
 ```
 
-## TLS Certificate Handling
+## Connection Modes
 
-By default, rustifi uses **strict TLS validation** and requires valid certificates.
-
-### For Controllers with Valid Certificates
-
-Use the standard constructors:
+### 1) Local controller (strict TLS, recommended)
 
 ```rust
-// These require valid TLS certificates
-let client = UnifiClient::new("https://unifi.example.com")?;
 let client = UnifiClient::with_api_key("https://unifi.example.com", "api-key")?;
 ```
 
-### For Local Controllers with Self-Signed Certificates
-
-Many local UniFi controllers use self-signed certificates. For these, use the `_insecure` variants:
+### 2) Local controller with self-signed certificate
 
 ```rust
-// WARNING: Only use for local controllers on trusted networks
-let client = UnifiClient::new_insecure("https://192.168.1.1")?;
+// Only for trusted local networks
 let client = UnifiClient::with_api_key_insecure("https://192.168.1.1", "api-key")?;
 ```
 
-> **Security Warning**: The `_insecure` methods disable TLS certificate validation,
-> which makes connections vulnerable to man-in-the-middle attacks. Only use these
-> methods for local controllers on trusted networks.
+### 3) Custom API base path (UniFi OS integration prefix, etc.)
 
-## WORK IN PROGRESS
+```rust
+let client = UnifiClient::with_base_path_and_key(
+    "https://unifi.example.com",
+    "/proxy/network/integration",
+    "api-key",
+)?;
+```
 
+### 4) Remote access via `api.ui.com`
 
-## To Do
+```rust
+let client = UnifiClient::remote("site-manager-api-key", "your-host-id")?;
+```
 
-- [x] Implement some access points
-- [ ] Implement some switches
-- [ ] Ensure compliance with Rust API Guidelines Checklist, Including traits
-    - Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Display, Default
-    - From, TryFrom, AsRef, AsMut
-    - Errors
-- [ ] Link capacity on uplinks
-- [ ] Tests
-- [ ] Documentation
-- [ ] Examples
+Remote mode targets:
 
-## Layout & Features
+`https://api.ui.com/v1/connector/consoles/{host_id}/...`
 
-- [ ] Devices
-    - [x] Basic Information
-        - [x] Get
-        - [x] Update
-    - [ ] AP
-        - [ ] Group
-        - [x] Model
-        - [x] Name
-        - [x] Radio
-            - [x] Channel
-            - [x] Width
-            - [x] Power
-            - [ ] Meshing
-        - [x] Number of Clients
-        - [ ] CPU
-        - [ ] Memory
-    - [ ] SW
-        - [x] Name
-        - [x] Model
-        - [ ] Port
-            - [ ] Number
-            - [ ] Type
-            - [ ] Status
-            - [ ] Uptime
-            - [ ] Bytes
-            - [ ] Packets
-            - [ ] Dropped
-            - [ ] Errors
-            - [ ] Native VLAN
-            - [ ] Allowed VLANs
-            - [ ] Port Isolation
-        - [x] CPU
-        - [x] Memory
-- [ ] Clients
-    - [ ] Type
-    - [ ] Impose Punishment
-    - [ ] Ban
-- [ ] WiFi
-- [ ] Network
+## Endpoint Pattern
 
-## Models
+Use `request::<E>()` for endpoints without parameters, and `execute(&endpoint)` for dynamic endpoints.
 
-### APs
+```rust
+use rustifi::api::devices::GetDevices;
+use rustifi::api::sites::GetSites;
 
-- [ ] UX
-- [ ] NanoHD
-- [ ] U7-Pro
-- [ ] U7-Pro-Max
-- [x] U6-Mesh
-- [x] UWB-XG
-- [x] UAP-XG
-- [x] AC-Mesh
-- [x] AC-Mesh-Pro
-- [x] AC-Pro
+let sites = client.request::<GetSites>().await?;
+let devices = client.execute(&GetDevices::new("site-id")).await?;
+```
 
-### Switch
+## Pagination Helpers
 
-- [ ] USW-Pro-Aggregation
-- [ ] USW-Aggregation
+Fetch all pages automatically:
+
+```rust
+let all_clients = client.fetch_all_clients("site-id").await?;
+let all_devices = client.fetch_all_devices("site-id").await?;
+```
+
+Or stream page by page:
+
+```rust
+use futures::StreamExt;
+
+let mut stream = client.stream_clients("site-id").page_size(200);
+while let Some(page) = stream.next().await {
+    let clients = page?;
+    println!("Fetched {} clients", clients.len());
+}
+```
+
+## High-Level Utilities
+
+```rust
+// Device + details + latest statistics
+let device = client.fetch_device_with_info("site-id", "device-id").await?;
+
+// All devices with details/statistics fetched concurrently
+let devices = client.fetch_all_devices_with_info("site-id").await?;
+
+// Client counts by device
+let stats = client.fetch_client_stats_by_device("site-id").await?;
+```
+
+## Implemented API Modules
+
+- Sites
+- Devices (including pending devices, adoption, device actions, port actions)
+- Clients
+- Networks
+- WiFi broadcasts
+- Hotspot vouchers
+- Firewall zones and policies
+- ACL rules
+- DNS policies
+- Traffic matching lists
+- Resources (WANs, VPN servers, VPN tunnels, RADIUS profiles, device tags, DPI data, countries)
+
+## Examples
+
+- `examples/fetch-all`: end-to-end data fetch demo
+- `examples/rustifi-cli`: CLI wrapper around common fetch operations
+
+Run the fetch-all example:
+
+```bash
+cd examples/fetch-all
+UNIFI_URL=https://your-controller \
+UNIFI_API_KEY=your-api-key \
+cargo run
+```
+
+Run remote mode:
+
+```bash
+cd examples/fetch-all
+UNIFI_HOST_ID=your-host-id \
+UNIFI_API_KEY=your-api-key \
+cargo run
+```
+
+## Security Notes
+
+- Constructors without `_insecure` enforce TLS certificate validation.
+- `_insecure` constructors disable cert and hostname validation and are vulnerable to MITM attacks.
+- Prefer strict TLS in production.
 
 ## License
 
-This project is licensed under GNU General Public License v2.0 (`GPL-2.0-only`).
+Licensed under GNU General Public License v2.0 (`GPL-2.0-only`). See `LICENSE.md`.
