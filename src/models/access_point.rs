@@ -30,7 +30,7 @@ impl From<&str> for APModel {
             "UAPA6B1" => APModel::E7Campus,
             "U7NHD" => APModel::NanoHD,
             _ => {
-                eprintln!("Unknown model: {}", s);
+                // Unknown model - silently fall through to Unknown variant
                 APModel::Unknown
             }
         }
