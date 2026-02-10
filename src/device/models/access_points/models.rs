@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub enum APModel {
     ACMesh,
     ACMeshPro,
@@ -16,9 +16,9 @@ pub enum APModel {
     XG,
 }
 
-impl From<String> for APModel {
-    fn from(s: String) -> Self {
-        match s.as_str() {
+impl From<&str> for APModel {
+    fn from(s: &str) -> Self {
+        match s {
             "UXSDM" => APModel::BasestationXG,
             "U7MSH" => APModel::ACMesh,
             "U6M" => APModel::U6Mesh,
@@ -30,10 +30,16 @@ impl From<String> for APModel {
             "UAPA6B1" => APModel::E7Campus,
             "U7NHD" => APModel::NanoHD,
             _ => {
-                println!("Unknown model: {}", s);
+                eprintln!("Unknown model: {}", s);
                 APModel::Unknown
             }
         }
+    }
+}
+
+impl From<String> for APModel {
+    fn from(s: String) -> Self {
+        APModel::from(s.as_str())
     }
 }
 
