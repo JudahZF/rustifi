@@ -130,3 +130,7 @@ let client = UnifiClient::with_api_key_insecure("https://192.168.1.1", "api-key"
 
 - [ ] USW-Pro-Aggregation
 - [ ] USW-Aggregation
+
+## License
+
+This project is licensed under GNU General Public License v2.0 (`GPL-2.0-only`).

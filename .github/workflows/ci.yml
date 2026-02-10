@@ -31,7 +31,7 @@ env:
 jobs:
   build_and_test:
     name: Rust project - latest
-    runs-on: blacksmith-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: write
@@ -47,7 +47,7 @@ jobs:
             experimental: true
     continue-on-error: ${{ matrix.experimental || false }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: Swatinem/rust-cache@v2
       - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
       - run: cargo build --locked --verbose --all-targets
