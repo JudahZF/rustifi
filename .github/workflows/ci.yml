@@ -31,7 +31,7 @@ env:
 jobs:
   build_and_test:
     name: Rust project - latest
-    runs-on: blacksmith-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: write
