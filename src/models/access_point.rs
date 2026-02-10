@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Clone, Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub enum APModel {
     ACMesh,
     ACMeshPro,
@@ -58,5 +58,34 @@ impl Display for APModel {
             APModel::NanoHD => write!(f, "Nano HD"),
             APModel::Unknown => write!(f, "Unknown"),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::APModel;
+
+    #[test]
+    fn test_ap_model_from_known_codes() {
+        assert_eq!(APModel::from("UXSDM"), APModel::BasestationXG);
+        assert_eq!(APModel::from("U6M"), APModel::U6Mesh);
+        assert_eq!(APModel::from("U7NHD"), APModel::NanoHD);
+        assert_eq!(APModel::from("UCXG"), APModel::XG);
+    }
+
+    #[test]
+    fn test_ap_model_from_string_delegates() {
+        assert_eq!(APModel::from("U7MP".to_string()), APModel::ACMeshPro);
+    }
+
+    #[test]
+    fn test_ap_model_unknown_fallback() {
+        assert_eq!(APModel::from("NOT_A_REAL_MODEL"), APModel::Unknown);
+    }
+
+    #[test]
+    fn test_ap_model_display_strings() {
+        assert_eq!(APModel::BasestationXG.to_string(), "Basestation XG");
+        assert_eq!(APModel::Unknown.to_string(), "Unknown");
     }
 }

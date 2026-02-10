@@ -1,3 +1,4 @@
+pub mod access_point;
 pub mod client;
 pub mod common;
 pub mod device;
@@ -9,6 +10,7 @@ pub mod site_device;
 pub mod voucher;
 pub mod wifi;
 
+pub use access_point::APModel;
 pub use client::{AccessType, Client, ClientAccess, ClientType};
 pub use common::{IpAddress, MacAddress, Timestamp};
 pub use device::{Device, DeviceType};

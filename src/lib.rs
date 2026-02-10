@@ -19,8 +19,8 @@ pub mod prelude {
     pub use crate::client::UnifiClient;
     pub use crate::error::{Error, Result};
     pub use crate::models::{
-        Client, Device, DeviceType, FirewallAction, FirewallPolicy, FirewallZone, Site, Voucher,
-        WifiBroadcast, WifiSecurity,
+        APModel, Client, Device, DeviceType, FirewallAction, FirewallPolicy, FirewallZone, Site,
+        Voucher, WifiBroadcast, WifiSecurity,
     };
     pub use crate::stats::DeviceClientStats;
     pub use crate::wrappers::DeviceWithInfo;
